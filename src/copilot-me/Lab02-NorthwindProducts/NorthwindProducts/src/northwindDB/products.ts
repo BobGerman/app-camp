@@ -47,7 +47,7 @@ export const deleteProduct = async (productId: number): Promise<void> => {
 
 export const updateProduct = async (updatedProduct: Product): Promise<void> => {
     const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.PRODUCT);
-    const product = await tableClient.getEntity(TABLE_NAME.CUSTOMER, updatedProduct.ProductID.toString()) as Product;
+    const product = await tableClient.getEntity(TABLE_NAME.PRODUCT, updatedProduct.ProductID.toString()) as Product;
     if (!product) {
         throw new Error("Product not found");
     }
