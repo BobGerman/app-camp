@@ -23,7 +23,14 @@
         "full": "Access catalog and product information from the Northwind database"
     },
     "accentColor": "#3690E9",
-    "bots": [],
+    "bots": [
+        {
+          "botId": "${{BOT_ID}}",
+          "scopes": [ "personal", "team", "groupchat" ],
+          "isNotificationOnly": false,
+          "supportsFiles": false
+        }
+      ],
     "composeExtensions": [
         {
             "botId": "${{BOT_ID}}",
