@@ -22,9 +22,9 @@ async function handleTeamsMessagingExtensionQuery(
     products.forEach((pdt) => {      
         const preview = CardFactory.heroCard(pdt.ProductName);       
         var template = new ACData.Template(productCard);
-        const imageGenerator = Math.floor((pdt.ProductID / 1) % 10);
-        //todo: Replace with picsum images
-        const imgUrl = `https://${process.env.HOST_NAME}/images/${imageGenerator}.PNG`
+        const imageGenerator = Math.floor((pdt.ProductID / 1) % 10);       
+        //const imgUrl = `https://${process.env.HOST_NAME}/images/${imageGenerator}.PNG`
+        const imgUrl = `https://source.unsplash.com/random/200x200?sig=${imageGenerator}`;
         var card = template.expand({
             $root: {
                 productName: pdt.ProductName, unitsInStock: pdt.UnitsInStock,
@@ -54,8 +54,7 @@ async function handleTeamsCardActionInvoke(context: TurnContext) {
             await updateProduct(product);
             var template = new ACData.Template(stockUpdateSuccess);
             const imageGenerator = Math.floor((data.pdtId / 1) % 10);
-            //todo: Replace with picsum images
-            const imgUrl = `https://${process.env.HOST_NAME}/images/${imageGenerator}.PNG`
+            const imgUrl = `https://source.unsplash.com/random/200x200?sig=${imageGenerator}`;
             var card = template.expand({
                 $root: {
                     productName: data.pdtName, unitsInStock: data.txtStock,
