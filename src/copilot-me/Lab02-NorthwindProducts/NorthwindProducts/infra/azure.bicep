@@ -66,6 +66,10 @@ resource webApp 'Microsoft.Web/sites@2021-02-01' = {
   }
 }
 
+// Add new storage account
+// Add connection string
+
+
 // Register your web service as a bot with the Bot Framework
 module azureBotRegistration './botRegistration/azurebot.bicep' = {
   name: 'Azure-Bot-registration'
