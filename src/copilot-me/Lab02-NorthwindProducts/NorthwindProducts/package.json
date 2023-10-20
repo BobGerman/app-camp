@@ -10,7 +10,7 @@
     "main": "./lib/src/index.js",
     "scripts": {
         "dev:teamsfx": "env-cmd --silent -f .localConfigs npm run dev",
-        "dev": "nodemon --exec node --inspect=9239 --signal SIGINT -r ts-node/register ./src/index.ts",
+        "dev": "nodemon --exec node --inspect=9239 --ignore _storage_emulator/ --signal SIGINT -r ts-node/register ./src/index.ts",
         "build": "tsc --build",
         "start": "node ./lib/src/index.js",
         "storage": "azurite --silent --location ./_storage_emulator --debug ./_storage_emulator/debug.log",
