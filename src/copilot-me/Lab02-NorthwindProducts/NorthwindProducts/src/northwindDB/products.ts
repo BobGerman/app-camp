@@ -8,6 +8,13 @@ import config from "../config";
 // NOTE: We're force fitting a relational database into a non-relational database so please
 // forgive the inefficiencies. This is just for demonstration purposes.
 
+export const searchProducts = async (productName: string, categoryName: string, inventoryStatus: string,
+     supplierCity: string, supplierName: string): Promise<Product[]> => {
+
+    return await getProducts(productName);
+
+}
+
 export const getProducts = async (startsWith: string): Promise<Product[]> => {
 
     const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.PRODUCT);

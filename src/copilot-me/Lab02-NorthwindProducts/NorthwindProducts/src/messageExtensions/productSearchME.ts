@@ -4,31 +4,46 @@ import {
     MessagingExtensionQuery,
     MessagingExtensionResponse,
 } from "botbuilder";
-import { updateProduct,getProduct,getProducts } from "../northwindDB/products";
+import { updateProduct, getProduct, getProducts, searchProducts } from "../northwindDB/products";
 import {editCard} from './cards/editCard';
 import {successCard} from './cards/successCard';
 import {errorCard} from './cards/errorCard'
 import * as ACData from "adaptivecards-templating";
 
 import { CreateInvokeResponse } from './utils';
-import config from "../config";
+
+const COMMAND_ID = "inventorySearch";
+
 async function handleTeamsMessagingExtensionQuery(
     context: TurnContext,
     query: MessagingExtensionQuery
 ): Promise<MessagingExtensionResponse> {
-    const searchQuery = query.parameters[0].value;
-    const products = await getProducts(searchQuery);
+
+    // Unpack the parameters. From Copilot they'll come in the parameters array; from a human they will
+    // be comma separated
+    // let params =  query.parameters[0]?.value.split(',');
+    let [ productName, categoryName, inventoryStatus, supplierCity, supplierName ] = (query.parameters[0]?.value.split(','));
+
+    productName ??= query.parameters[0]?.value ?? "";
+    categoryName ??= query.parameters[1]?.value ?? "";
+    inventoryStatus ??= query.parameters[2]?.value ?? "";
+    supplierCity ??= query.parameters[2]?.value ?? "";
+    supplierName ??= query.parameters[3]?.value ?? "";
+
+    console.log(`Received search productName=${productName}, categoryName=${categoryName}, inventoryStatus=${inventoryStatus}, supplierCity=${supplierCity}, supplierName=${supplierName}`);
+    const products = await  searchProducts(productName, categoryName, inventoryStatus, supplierCity, supplierName);
+
     const attachments = [];
     products.forEach((pdt) => {      
         const preview = CardFactory.heroCard(pdt.ProductName);       
         var template = new ACData.Template(editCard);
-        const imageGenerator = Math.floor((pdt.ProductID / 1) % 10);       
-        //const imgUrl = `https://${process.env.HOST_NAME}/images/${imageGenerator}.PNG`
-        const imgUrl = `https://source.unsplash.com/random/200x200?sig=${imageGenerator}`;
         var card = template.expand({
             $root: {
-                productName: pdt.ProductName, unitsInStock: pdt.UnitsInStock,
-                productId: pdt.ProductID, categoryId: pdt.CategoryID, imageUrl: imgUrl
+                productName: pdt.ProductName, 
+                unitsInStock: pdt.UnitsInStock,
+                productId: pdt.ProductID, 
+                categoryId: pdt.CategoryID, 
+                imageUrl: pdt.ImageUrl
             }
         });       
         const adaptive = CardFactory.adaptiveCard(card);
@@ -70,5 +85,4 @@ async function handleTeamsCardActionInvoke(context: TurnContext) {
         }
     }
 }
-export default { handleTeamsMessagingExtensionQuery,handleTeamsCardActionInvoke }
-
+export default { COMMAND_ID, handleTeamsMessagingExtensionQuery,handleTeamsCardActionInvoke }
