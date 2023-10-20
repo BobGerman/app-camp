@@ -9,34 +9,11 @@ import config from "../config";
 // forgive the inefficiencies. This is just for demonstration purposes.
 
 export async function searchProducts(productName: string, categoryName: string, inventoryStatus: string,
-    supplierCity: string, supplierName: string): Promise<Product[]> {
+    supplierCity: string, supplierName: string): Promise<ProductEx[]> {
 
-    const categories = await loadReferenceData<Category>(TABLE_NAME.CATEGORY);
-    const suppliers = await loadReferenceData<Supplier>(TABLE_NAME.SUPPLIER);
-    const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.PRODUCT);
-
-    const entities = tableClient.listEntities();
-
-    let products = [];
-    for await (const entity of entities) {
-        products.push(entity);
-    }
-
-    // Denormalize products 
-    const productsEx = products as ProductEx[]; 
-    for await (const p of productsEx) {
-        p.CategoryName = categories[p.CategoryID].CategoryName;
-        p.SupplierName = suppliers[p.SupplierID].CompanyName;
-        p.SupplierCity = suppliers[p.SupplierID].City;
-        // 'in stock', 'low stock', 'on order', or 'out of stock'
-        p.InventoryStatus = "In stock";
-        if (p.UnitsInStock == 0) p.InventoryStatus = "Out of stock";
-        if (p.UnitsOnOrder > 0) p.InventoryStatus = "On order";
-        if (p.UnitsInStock < p.ReorderLevel) p.InventoryStatus = "Need to order";
-    }
+    let result = await getAllProductsEx();
 
     // Filter products
-    let result = productsEx;
     if (productName) {
         result = result.filter((p) => p.ProductName.toLowerCase().startsWith(productName.toLowerCase()));
     }
@@ -74,6 +51,58 @@ async function loadReferenceData<DataType>(tableName): Promise<ReferenceData<Dat
 
 }
 
+// Reference tables never change in this demo app - so they're cached here
+let categories: ReferenceData<Category> = null;
+let suppliers: ReferenceData<Supplier> = null;
+
+async function getAllProductsEx(): Promise<ProductEx[]> {
+
+    // Ensure reference data are loaded
+    categories = categories ?? await loadReferenceData<Category>(TABLE_NAME.CATEGORY);
+    suppliers = suppliers ?? await loadReferenceData<Supplier>(TABLE_NAME.SUPPLIER);
+
+    // We always read the products fresh in case somebody made a change
+    const result: ProductEx[] = [];
+    const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.PRODUCT);
+
+    const entities = tableClient.listEntities();
+
+    for await (const entity of entities) {
+        let p: ProductEx = {
+            etag: entity.etag as string,
+            partitionKey: entity.partitionKey as string,
+            rowKey: entity.rowKey as string,
+            timestamp: new Date(entity.timestamp),
+            ProductID: entity.ProductID as number,
+            ProductName: entity.ProductName as string,
+            SupplierID: entity.SupplierID as number,
+            CategoryID: entity.CategoryID as number,
+            QuantityPerUnit: entity.QuantityPerUnit as string,
+            UnitPrice: entity.UnitPrice as number,
+            UnitsInStock: entity.UnitsInStock as number,
+            UnitsOnOrder: entity.UnitsOnOrder as number,
+            ReorderLevel: entity.ReorderLevel as number,
+            Discontinued: entity.Discontinued as boolean,
+            ImageUrl: entity.ImageUrl as string,
+            CategoryName: "",
+            SupplierName: "",
+            SupplierCity: "",
+            InventoryStatus: ""
+        };
+        // Fill in extended properties
+        p.CategoryName = categories[p.CategoryID].CategoryName;
+        p.SupplierName = suppliers[p.SupplierID].CompanyName;
+        p.SupplierCity = suppliers[p.SupplierID].City;
+        // 'in stock', 'low stock', 'on order', or 'out of stock'
+        p.InventoryStatus = "In stock";
+        if (p.UnitsInStock == 0) p.InventoryStatus = "Out of stock";
+        if (p.UnitsOnOrder > 0) p.InventoryStatus = "On order";
+        if (p.UnitsInStock < p.ReorderLevel) p.InventoryStatus = "Need to order";    
+        result.push(p);
+    }
+    return result;
+}
+
 export async function getProducts(startsWith: string): Promise<Product[]> {
 
     const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.PRODUCT);
@@ -87,13 +116,13 @@ export async function getProducts(startsWith: string): Promise<Product[]> {
         }
     }
     return result;
-};
+}
 
 export async function getProduct(productId: number): Promise<Product> {
     const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.PRODUCT);
     const product = await tableClient.getEntity(TABLE_NAME.PRODUCT, productId.toString()) as Product;
     return product;
-};
+}
 
 export async function updateProduct(updatedProduct: Product): Promise<void> {
     const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.PRODUCT);
@@ -102,7 +131,7 @@ export async function updateProduct(updatedProduct: Product): Promise<void> {
         throw new Error("Product not found");
     }
     await tableClient.updateEntity({ ...product, ...updatedProduct }, "Merge");
-};
+}
 
 
 // #region -- NOT USED, NOT TESTED ---------------------------------------------------------
