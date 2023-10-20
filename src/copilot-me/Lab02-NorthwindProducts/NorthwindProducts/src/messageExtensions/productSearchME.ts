@@ -5,11 +5,11 @@ import {
     MessagingExtensionResponse,
 } from "botbuilder";
 import { updateProduct,getProduct,getProducts } from "../northwindDB/products";
-import {productCard} from './cards/productCard'
-import {stockUpdateSuccess} from './cards/stockUpdateSuccess';
+import {editCard} from './cards/editCard';
+import {successCard} from './cards/successCard';
 import {errorCard} from './cards/errorCard'
 import * as ACData from "adaptivecards-templating";
-import * as AdaptiveCards from "adaptivecards";
+
 import { CreateInvokeResponse } from './utils';
 import config from "../config";
 async function handleTeamsMessagingExtensionQuery(
@@ -21,7 +21,7 @@ async function handleTeamsMessagingExtensionQuery(
     const attachments = [];
     products.forEach((pdt) => {      
         const preview = CardFactory.heroCard(pdt.ProductName);       
-        var template = new ACData.Template(productCard);
+        var template = new ACData.Template(editCard);
         const imageGenerator = Math.floor((pdt.ProductID / 1) % 10);       
         //const imgUrl = `https://${process.env.HOST_NAME}/images/${imageGenerator}.PNG`
         const imgUrl = `https://source.unsplash.com/random/200x200?sig=${imageGenerator}`;
@@ -52,7 +52,7 @@ async function handleTeamsCardActionInvoke(context: TurnContext) {
             const product=await getProduct(data.pdtId);
             product.UnitsInStock=data.txtStock;
             await updateProduct(product);
-            var template = new ACData.Template(stockUpdateSuccess);
+            var template = new ACData.Template(successCard);
             const imageGenerator = Math.floor((data.pdtId / 1) % 10);
             const imgUrl = `https://source.unsplash.com/random/200x200?sig=${imageGenerator}`;
             var card = template.expand({
