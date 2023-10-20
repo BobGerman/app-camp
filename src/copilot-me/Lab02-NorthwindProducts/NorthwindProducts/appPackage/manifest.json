@@ -36,12 +36,12 @@
             "botId": "${{BOT_ID}}",
             "commands": [
                 {
-                    "id": "productName",
+                    "id": "inventorySearch",
                     "context": [
                         "compose",
                         "commandBox"
                     ],
-                    "description": "Search Northwind products by name,category, or supplier information",
+                    "description": "Search Northwind product inventory by name, category, inventory status, and supplier city",
                     "title": "Search",
                     "type": "query",
                     "parameters": [
@@ -55,6 +55,12 @@
                             "name": "categoryName",
                             "title": "Category name",
                             "description": "Enter the category name product",
+                            "inputType": "text"
+                        },
+                        {
+                            "name": "inventoryStatus",
+                            "title": "Inventory status",
+                            "description": "Enter 'in stock', 'low stock', 'on order', or 'out of stock'",
                             "inputType": "text"
                         },
                         {

@@ -101,6 +101,13 @@ export interface Product extends Row {
     ImageUrl: string;
 }
 
+// Denormalized version of product
+export interface ProductEx extends Product {
+    CategoryName: string,
+    SupplierName: string,
+    SupplierCity: string,
+    InventoryStatus: string
+}
 export interface Supplier extends Row {
     SupplierID: number;
     CompanyName: string;
@@ -115,3 +122,4 @@ export interface Supplier extends Row {
     Fax: string;
     HomePage: string;
 }
+

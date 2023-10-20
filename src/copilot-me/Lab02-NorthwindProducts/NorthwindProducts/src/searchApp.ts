@@ -8,34 +8,33 @@ import {
 import productSearchME from "./messageExtensions/productSearchME";
 export class SearchApp extends TeamsActivityHandler {
   constructor() {
-    super();   
+    super();
   }
 
-  // Search.
+  // Handle search message extension
   public async handleTeamsMessagingExtensionQuery(
     context: TurnContext,
     query: MessagingExtensionQuery
   ): Promise<MessagingExtensionResponse> {
 
-    const meName = query.parameters[0].name;
-    switch (meName) {
-      case "productName": {
+    switch (query.commandId) {
+      case productSearchME.COMMAND_ID: {
         return productSearchME.handleTeamsMessagingExtensionQuery(context, query);
       }
     }
 
   }
 
-// On Activity Invoke.
-  public async onInvokeActivity(context:TurnContext): Promise<InvokeResponse> {
+  // Handle adaptive card action
+  public async onInvokeActivity(context: TurnContext): Promise<InvokeResponse> {
     let runEvents = true;
-    try {      
-        switch (context.activity.name) {
-          case 'adaptiveCard/action':
-            return productSearchME.handleTeamsCardActionInvoke(context);
-          default:
-            runEvents = false;
-            return super.onInvokeActivity(context);        
+    try {
+      switch (context.activity.name) {
+        case 'adaptiveCard/action':
+          return productSearchME.handleTeamsCardActionInvoke(context);
+        default:
+          runEvents = false;
+          return super.onInvokeActivity(context);
       }
     } catch (err) {
       if (err.message === 'NotImplemented') {
