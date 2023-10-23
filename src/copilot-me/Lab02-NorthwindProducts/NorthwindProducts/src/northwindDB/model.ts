@@ -16,7 +16,7 @@ interface Row {
 }
 
 export interface Category extends Row {
-    CategoryID: number;
+    CategoryID: string;
     CategoryName: string;
     Description: string;
     Picture: string;
@@ -88,10 +88,10 @@ export interface Order extends Row {
 }
 
 export interface Product extends Row {
-    ProductID: number;
+    ProductID: string;
     ProductName: string;
-    SupplierID: number;
-    CategoryID: number;
+    SupplierID: string;
+    CategoryID: string;
     QuantityPerUnit: string;
     UnitPrice: number;
     UnitsInStock: number;
@@ -109,7 +109,7 @@ export interface ProductEx extends Product {
     InventoryStatus: string
 }
 export interface Supplier extends Row {
-    SupplierID: number;
+    SupplierID: string;
     CompanyName: string;
     ContactName: string;
     ContactTitle: string;

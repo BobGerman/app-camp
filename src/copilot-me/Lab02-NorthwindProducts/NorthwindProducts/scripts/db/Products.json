@@ -3,6 +3,7 @@
     {
       "ProductID": 1,
       "ProductName": "Chai",
+      "ImageUrl": "https://picsum.photos/id/431/200/300",
       "SupplierID": 1,
       "CategoryID": 1,
       "QuantityPerUnit": "10 boxes x 20 bags",
