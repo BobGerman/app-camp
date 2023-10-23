@@ -22,7 +22,7 @@ async function handleTeamsMessagingExtensionQuery(
     console.log(`🔍 Query JSON:\n${JSON.stringify(query)}`);
 
     // Unpack the parameters. From Copilot they'll come in the parameters array; from a human they'll be comma separated
-    let [productName, categoryName, inventoryStatus, supplierCity, supplierName] = (query.parameters[0]?.value.split(','));
+    let [productName, categoryName, inventoryStatus, supplierCity, stockLevel] = (query.parameters[0]?.value.split(','));
 
     // productName = (query.parameters[0]?.value != null && query.parameters[0].value==="*") ? "" : (query.parameters[0]?.value ?? "");
 
@@ -30,15 +30,15 @@ async function handleTeamsMessagingExtensionQuery(
     categoryName ??= cleanupParam(query.parameters[1]?.value);
     inventoryStatus ??= cleanupParam(query.parameters[2]?.value);
     supplierCity ??= cleanupParam(query.parameters[3]?.value);
-    supplierName ??= cleanupParam(query.parameters[4]?.value);
-    console.log(`🔎 Processed parameters:\nproductName=${productName}, categoryName=${categoryName}, inventoryStatus=${inventoryStatus}, supplierCity=${supplierCity}, supplierName=${supplierName}`);
+    stockLevel ??= cleanupParam(query.parameters[4]?.value);
+    console.log(`🔎 Processed parameters:\nproductName=${productName}, categoryName=${categoryName}, inventoryStatus=${inventoryStatus}, supplierCity=${supplierCity}, stockLevel=${stockLevel}`);
 
-    const products = await searchProducts(productName, categoryName, inventoryStatus, supplierCity, supplierName);
+    const products = await searchProducts(productName, categoryName, inventoryStatus, supplierCity, stockLevel);
 
     const attachments = [];
     products.forEach((product) => {
         const preview = CardFactory.heroCard(product.ProductName,
-            `Supplied by ${product.SupplierName} from ${product.SupplierCity}`,
+            `Supplied by ${product.SupplierName} of ${product.SupplierCity}; ${product.UnitsInStock} in stock`,
             [product.ImageUrl]);
         var template = new ACData.Template(editCard);
         var card = template.expand({

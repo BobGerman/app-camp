@@ -9,7 +9,7 @@ import config from "../config";
 // forgive the inefficiencies. This is just for demonstration purposes.
 
 export async function searchProducts(productName: string, categoryName: string, inventoryStatus: string,
-    supplierCity: string, supplierName: string): Promise<ProductEx[]> {
+    supplierCity: string, stockLevel: string): Promise<ProductEx[]> {
 
     let result = await getAllProductsEx();
 
@@ -26,10 +26,40 @@ export async function searchProducts(productName: string, categoryName: string, 
     if (supplierCity) {
         result = result.filter((p) => p.SupplierCity.toLowerCase().startsWith(supplierCity.toLowerCase()));
     }
-    if (supplierName) {
-        result = result.filter((p) => p.SupplierName.toLowerCase().startsWith(supplierName.toLowerCase()));
+    if (stockLevel) {
+        result = result.filter((p) => isInRange(stockLevel, p.UnitsInStock));
     }
 
+    return result;
+}
+
+// Used to filter based on a range entered in the stockLevel parameter
+// Returns true iff a value is within the range specified in the range expression
+function isInRange(rangeExpression: string, value: number) {
+
+    let result = false;     // Return false if the expression is malformed
+
+    if (rangeExpression.indexOf('-')< 0) {
+        // If here, we have a single value or a malformed expression
+        const val = Number(rangeExpression);
+        if (!isNaN(val)) {
+            result = value === val;
+        }
+    } else if (rangeExpression.indexOf('-') === rangeExpression.length-1) {
+        // If here we have a single lower bound or a malformed expression
+        const lowerBound = Number(rangeExpression.slice(0,-1));
+        if (!isNaN(lowerBound)) {
+            result = value >= lowerBound;
+        }
+    } else {
+        // If here we have a range or a malformed expression
+        const bounds = rangeExpression.split('-');
+        const lowerBound = Number(bounds[0]);
+        const upperBound = Number(bounds[1]);
+        if (!isNaN(lowerBound) && !isNaN(upperBound)) {
+            result = lowerBound <= value && upperBound >= value;
+        }
+    }
     return result;
 }
 
@@ -73,15 +103,15 @@ async function getAllProductsEx(): Promise<ProductEx[]> {
             partitionKey: entity.partitionKey as string,
             rowKey: entity.rowKey as string,
             timestamp: new Date(entity.timestamp),
-            ProductID: entity.ProductID as number,
+            ProductID: entity.ProductID as string,
             ProductName: entity.ProductName as string,
-            SupplierID: entity.SupplierID as number,
-            CategoryID: entity.CategoryID as number,
+            SupplierID: entity.SupplierID as string,
+            CategoryID: entity.CategoryID as string,
             QuantityPerUnit: entity.QuantityPerUnit as string,
-            UnitPrice: entity.UnitPrice as number,
-            UnitsInStock: entity.UnitsInStock as number,
-            UnitsOnOrder: entity.UnitsOnOrder as number,
-            ReorderLevel: entity.ReorderLevel as number,
+            UnitPrice: Number(entity.UnitPrice),
+            UnitsInStock: Number(entity.UnitsInStock),
+            UnitsOnOrder: Number(entity.UnitsOnOrder),
+            ReorderLevel: Number(entity.ReorderLevel),
             Discontinued: entity.Discontinued as boolean,
             ImageUrl: entity.ImageUrl as string,
             CategoryName: "",
