@@ -108,3 +108,25 @@ To set up the Azurite database:
 3. check in Storage Explorer to be sure data is there
 4. Shut consoles
 
+## Favorite Picsum images
+
+Add this to the product in Products.json:
+"ImageUrl": "https://picsum.photos/id/xxx/200/300",
+
+where xxx is
+30 - Mug of coffee
+42 - Row of cups
+63 - Coffee mug
+102 - Raspberries
+112 - Field of grain
+113 - Hot beverage (abstract)
+165 - Field of Grain
+225 - Tea
+292 - Vegetables
+312 - Honey
+326 - Broth
+425 - Coffee beans
+429 - Raspberries
+431 - Cappacino or chai
+488 - Salsa or hot peppers
+493 - Museli with strawberries

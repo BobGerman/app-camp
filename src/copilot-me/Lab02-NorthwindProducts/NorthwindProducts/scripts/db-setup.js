@@ -55,9 +55,11 @@ const path = require("path");
             const rowKey = rowKeyColumnName ? entity[rowKeyColumnName].toString() : randomUUID();
             console.log(`Added entity to ${table} with key ${rowKey}`);
 
-            if (needImage) {
+            // If we're on a table that needs an image and one wasn't in the JSON, make a random one
+            if (needImage && !entity["ImageUrl"]) {
                 entity["ImageUrl"] = `https://picsum.photos/seed/${rowKey}/200/300`;
             }
+            // If we're on a table that needs a flag image, make it here
             if (needFlag) {
                 entity["FlagUrl"] = getFlagUrl(entity["Country"]);
             }
