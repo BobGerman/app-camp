@@ -38,7 +38,7 @@ async function handleTeamsMessagingExtensionQuery(
     const attachments = [];
     products.forEach((product) => {
         const preview = CardFactory.heroCard(product.ProductName,
-            `Supplied by ${product.SupplierName} of ${product.SupplierCity}; ${product.UnitsInStock} in stock`,
+            `Supplied by ${product.SupplierName} of ${product.SupplierCity}<br />${product.UnitsInStock} in stock`,
             [product.ImageUrl]);
         var template = new ACData.Template(editCard);
         var card = template.expand({
