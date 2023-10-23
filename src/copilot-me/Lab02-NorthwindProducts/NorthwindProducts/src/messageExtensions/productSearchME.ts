@@ -23,12 +23,15 @@ async function handleTeamsMessagingExtensionQuery(
     // be comma separated
     // let params =  query.parameters[0]?.value.split(',');
     let [ productName, categoryName, inventoryStatus, supplierCity, supplierName ] = (query.parameters[0]?.value.split(','));
+    console.log(JSON.stringify(query));
 
     productName ??= query.parameters[0]?.value ?? "";
+   // productName = (query.parameters[0]?.value != null && query.parameters[0].value==="*") ? "" : (query.parameters[0]?.value ?? "");
+
     categoryName ??= query.parameters[1]?.value ?? "";
     inventoryStatus ??= query.parameters[2]?.value ?? "";
-    supplierCity ??= query.parameters[2]?.value ?? "";
-    supplierName ??= query.parameters[3]?.value ?? "";
+    supplierCity ??= query.parameters[3]?.value ?? "";
+    supplierName ??= query.parameters[4]?.value ?? "";
 
     console.log(`Received search productName=${productName}, categoryName=${categoryName}, inventoryStatus=${inventoryStatus}, supplierCity=${supplierCity}, supplierName=${supplierName}`);
     const products = await  searchProducts(productName, categoryName, inventoryStatus, supplierCity, supplierName);
@@ -43,7 +46,13 @@ async function handleTeamsMessagingExtensionQuery(
                 unitsInStock: pdt.UnitsInStock,
                 productId: pdt.ProductID, 
                 categoryId: pdt.CategoryID, 
-                imageUrl: pdt.ImageUrl
+                imageUrl: pdt.ImageUrl,
+                supplierName: pdt.SupplierName,
+                supplierCity: pdt.SupplierCity,
+                categoryName: pdt.CategoryName,
+                inventoryStatus:pdt.InventoryStatus,
+                unitPrice:pdt.UnitPrice,
+                quantityPerUnit:pdt.QuantityPerUnit
             }
         });       
         const adaptive = CardFactory.adaptiveCard(card);
@@ -61,9 +70,8 @@ async function handleTeamsMessagingExtensionQuery(
 
 async function handleTeamsCardActionInvoke(context: TurnContext) {
     const request = context.activity.value;
-    if (request) {
-        if (request.action.verb === 'ok') {
-            const data = request.action.data;
+    const data = request.action.data;
+    if (data.txtStock && data.pdtId) {  
             const product=await getProduct(data.pdtId);
             product.UnitsInStock=data.txtStock;
             await updateProduct(product);
@@ -84,5 +92,4 @@ async function handleTeamsCardActionInvoke(context: TurnContext) {
              return CreateInvokeResponse(errorBody);
         }
     }
-}
 export default { COMMAND_ID, handleTeamsMessagingExtensionQuery,handleTeamsCardActionInvoke }

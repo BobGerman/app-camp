@@ -1,7 +1,7 @@
 {
     "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
     "manifestVersion": "1.16",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "id": "${{TEAMS_APP_ID}}",
     "packageName": "com.microsoft.teams.extension.northwindinv",
     "developer": {
@@ -19,8 +19,8 @@
         "full": "Northwind Inventory App"
     },
     "description": {
-        "short": "Access product information from the Northwind database",
-        "full": "Access catalog and product information from the Northwind database"
+        "short": "App allows you to find and update product inventory information",
+        "full": "Find products by name, category, inventory status (units in stock), and supplier city. Update inventory status like units in stock for a product."
     },
     "accentColor": "#3690E9",
     "bots": [
@@ -41,7 +41,7 @@
                         "compose",
                         "commandBox"
                     ],
-                    "description": "Search Northwind product inventory by name, category, inventory status, and supplier city",
+                    "description": "Search products by name, category, inventory status (units in stock), and supplier information",
                     "title": "Search",
                     "type": "query",
                     "parameters": [
@@ -54,13 +54,13 @@
                         {
                             "name": "categoryName",
                             "title": "Category name",
-                            "description": "Enter the category name product",
+                            "description": "Enter the category of the product",
                             "inputType": "text"
                         },
                         {
                             "name": "inventoryStatus",
                             "title": "Inventory status",
-                            "description": "Enter 'in stock', 'low stock', 'on order', or 'out of stock'",
+                            "description": "Enter what status of the product inventory. Possible values are 'in stock', 'low stock', 'on order', or 'out of stock'",
                             "inputType": "text"
                         },
                         {

@@ -31,7 +31,12 @@ export class SearchApp extends TeamsActivityHandler {
     try {
       switch (context.activity.name) {
         case 'adaptiveCard/action':
+          if(context.activity.value.action.verb === 'ok') {
           return productSearchME.handleTeamsCardActionInvoke(context);
+          }else{
+            runEvents = false;
+            return super.onInvokeActivity(context);
+          }
         default:
           runEvents = false;
           return super.onInvokeActivity(context);
@@ -49,5 +54,14 @@ export class SearchApp extends TeamsActivityHandler {
       }
     }
   }
+
+  defaultNextEvent = (context) => {
+    const runDialogs = async () => {
+        await this.handle(context, 'Dialog', async () => {
+            // noop
+        });
+    };
+    return runDialogs;
+}
 }
 

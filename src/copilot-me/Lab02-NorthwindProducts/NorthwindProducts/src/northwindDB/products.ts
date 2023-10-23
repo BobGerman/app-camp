@@ -97,7 +97,7 @@ async function getAllProductsEx(): Promise<ProductEx[]> {
         p.InventoryStatus = "In stock";
         if (p.UnitsInStock == 0) p.InventoryStatus = "Out of stock";
         if (p.UnitsOnOrder > 0) p.InventoryStatus = "On order";
-        if (p.UnitsInStock < p.ReorderLevel) p.InventoryStatus = "Need to order";    
+        if (p.UnitsInStock < p.ReorderLevel) p.InventoryStatus = "Low stock";    
         result.push(p);
     }
     return result;

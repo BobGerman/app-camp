@@ -34,17 +34,23 @@ export const editCard={
                                     "wrap": true
                                 },
                                 {
+                                    "type": "TextBlock",
+                                    "text": "${unitPrice} USD",   
+                                    "isSubtle": true,                                                                                                   
+                                    "wrap": true
+                                },
+                                {
                                     "type": "ColumnSet",
-                                    "columns": [
+                                    "columns": [                                       
                                         {
                                             "type": "Column",
                                             "width": "stretch",
                                             "items": [
                                                 {
                                                     "type": "TextBlock",
-                                                    "text": "$19.99",
-                                                    "weight": "Bolder",
-                                                    "size": "Large"
+                                                    "text": "${inventoryStatus}",
+                                                    "color": "${if(inventoryStatus == 'In stock', 'good', 'warning')}"
+                                                    
                                                 }
                                             ]
                                         },
@@ -54,63 +60,50 @@ export const editCard={
                                             "items": [
                                                 {
                                                     "type": "TextBlock",
-                                                    "text": "${unitsInStock} units",
-                                                    "color": "Good"
+                                                    "text": "${unitsInStock} units"                                                   
+                                                    
                                                 }
                                             ]
                                         }
                                     ]
                                 },
                                 {
-                                    "type": "ActionSet",
-                                    "actions": [
-                                         {
-            "type": "Action.ShowCard",
-            "title": "More Info",
-            "card": {
-                "type": "AdaptiveCard",
-                "body": [
-                    {
-                        "type": "TextBlock",
-                        "text": "Product Category",
-                        "weight": "Bolder"
-                    },
-                    {
-                        "type": "TextBlock",
-                        "text": "Electronics"
-                    },
-                    {
-                        "type": "TextBlock",
-                        "text": "Supplier Name",
-                        "weight": "Bolder"
-                    },
-                    {
-                        "type": "TextBlock",
-                        "text": "Supplier, Inc."
-                    },
-                    {
-                        "type": "TextBlock",
-                        "text": "Supplier City",
-                        "weight": "Bolder"
-                    },
-                    {
-                        "type": "TextBlock",
-                        "text": "New York"
-                    },
-                    {
-                        "type": "TextBlock",
-                        "text": "Quantity per Unit",
-                        "weight": "Bolder"
-                    },
-                    {
-                        "type": "TextBlock",
-                        "text": "10 units"
-                    }
-                ]
-            }
-        }
-                                    ]
+                                    "type": "TextBlock",
+                                    "text": "Product Category",
+                                    "weight": "Bolder"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "text": "${categoryName}"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "text": "Supplier Name",
+                                    "weight": "Bolder"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "text": "${supplierName}"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "text": "Supplier City",
+                                    "weight": "Bolder"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "text": "${supplierCity}"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "text": "Quantity per Unit",
+                                    "weight": "Bolder"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "text": "${quantityPerUnit}"
                                 }
+                                
                             ]
                         },
                         {
