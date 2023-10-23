@@ -26,6 +26,8 @@ async function handleTeamsMessagingExtensionQuery(
     console.log(JSON.stringify(query));
 
     productName ??= query.parameters[0]?.value ?? "";
+   // productName = (query.parameters[0]?.value != null && query.parameters[0].value==="*") ? "" : (query.parameters[0]?.value ?? "");
+
     categoryName ??= query.parameters[1]?.value ?? "";
     inventoryStatus ??= query.parameters[2]?.value ?? "";
     supplierCity ??= query.parameters[3]?.value ?? "";
