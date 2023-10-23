@@ -42,7 +42,7 @@ export const editCard={
                                             "items": [
                                                 {
                                                     "type": "TextBlock",
-                                                    "text": "$19.99",
+                                                    "text": "${unitPrice} USD",
                                                     "weight": "Bolder",
                                                     "size": "Large"
                                                 }
@@ -54,8 +54,9 @@ export const editCard={
                                             "items": [
                                                 {
                                                     "type": "TextBlock",
-                                                    "text": "${unitsInStock} units",
-                                                    "color": "Good"
+                                                    "text": "${inventoryStatus}",
+                                                    "color": "${if(inventoryStatus == 'In stock', 'good', 'warning')}"
+                                                    
                                                 }
                                             ]
                                         }
@@ -77,7 +78,7 @@ export const editCard={
                     },
                     {
                         "type": "TextBlock",
-                        "text": "Electronics"
+                        "text": "${categoryName}"
                     },
                     {
                         "type": "TextBlock",
@@ -86,7 +87,7 @@ export const editCard={
                     },
                     {
                         "type": "TextBlock",
-                        "text": "Supplier, Inc."
+                        "text": "${supplierName}"
                     },
                     {
                         "type": "TextBlock",
@@ -95,7 +96,7 @@ export const editCard={
                     },
                     {
                         "type": "TextBlock",
-                        "text": "New York"
+                        "text": "${supplierCity}"
                     },
                     {
                         "type": "TextBlock",
@@ -104,7 +105,7 @@ export const editCard={
                     },
                     {
                         "type": "TextBlock",
-                        "text": "10 units"
+                        "text": "${quantituPerUnit}"
                     }
                 ]
             }
