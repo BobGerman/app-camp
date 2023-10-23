@@ -23,12 +23,13 @@ async function handleTeamsMessagingExtensionQuery(
     // be comma separated
     // let params =  query.parameters[0]?.value.split(',');
     let [ productName, categoryName, inventoryStatus, supplierCity, supplierName ] = (query.parameters[0]?.value.split(','));
+    console.log(JSON.stringify(query));
 
     productName ??= query.parameters[0]?.value ?? "";
     categoryName ??= query.parameters[1]?.value ?? "";
     inventoryStatus ??= query.parameters[2]?.value ?? "";
-    supplierCity ??= query.parameters[2]?.value ?? "";
-    supplierName ??= query.parameters[3]?.value ?? "";
+    supplierCity ??= query.parameters[3]?.value ?? "";
+    supplierName ??= query.parameters[4]?.value ?? "";
 
     console.log(`Received search productName=${productName}, categoryName=${categoryName}, inventoryStatus=${inventoryStatus}, supplierCity=${supplierCity}, supplierName=${supplierName}`);
     const products = await  searchProducts(productName, categoryName, inventoryStatus, supplierCity, supplierName);
@@ -49,7 +50,7 @@ async function handleTeamsMessagingExtensionQuery(
                 categoryName: pdt.CategoryName,
                 inventoryStatus:pdt.InventoryStatus,
                 unitPrice:pdt.UnitPrice,
-                quantituPerUnit:pdt.QuantityPerUnit
+                quantityPerUnit:pdt.QuantityPerUnit
             }
         });       
         const adaptive = CardFactory.adaptiveCard(card);

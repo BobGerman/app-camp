@@ -42,9 +42,8 @@ export const editCard={
                                             "items": [
                                                 {
                                                     "type": "TextBlock",
-                                                    "text": "${unitPrice} USD",
-                                                    "weight": "Bolder",
-                                                    "size": "Large"
+                                                    "text": "${unitPrice} USD"
+                                                   
                                                 }
                                             ]
                                         },
@@ -56,6 +55,17 @@ export const editCard={
                                                     "type": "TextBlock",
                                                     "text": "${inventoryStatus}",
                                                     "color": "${if(inventoryStatus == 'In stock', 'good', 'warning')}"
+                                                    
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "Column",
+                                            "width": "stretch",
+                                            "items": [
+                                                {
+                                                    "type": "TextBlock",
+                                                    "text": "${unitsInStock} units"                                                   
                                                     
                                                 }
                                             ]
@@ -105,7 +115,7 @@ export const editCard={
                     },
                     {
                         "type": "TextBlock",
-                        "text": "${quantituPerUnit}"
+                        "text": "${quantityPerUnit}"
                     }
                 ]
             }
