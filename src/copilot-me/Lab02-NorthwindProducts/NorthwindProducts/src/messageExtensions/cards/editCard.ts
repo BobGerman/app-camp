@@ -199,7 +199,7 @@ export const editCard = {
                                     {
                                         "type": "Input.Text",
                                         "id": "txtStock",
-                                        "label": "New stock level",
+                                        "label": "Quantity",
                                         "min": 0,
                                         "max": 9999,
                                         "errorMessage": "Invalid input, use whole positive number",

@@ -179,7 +179,7 @@ async function handelTeamsCardActionRestock(context: TurnContext) {
     console.log(`Handling restock action ${JSON.stringify(data)}`)
     if (data.productId) {
         const product = await getProduct(data.productId);
-        product.UnitsOnOrder = Number(product.UnitsOnOrder) + Number(product.ReorderLevel);
+        product.UnitsOnOrder = Number(product.UnitsOnOrder) + Number(data.txtStock);
         await updateProduct(product);
         var template = new ACData.Template(successCard);
         var card = template.expand({
@@ -203,7 +203,7 @@ async function handelTeamsCardActionRestock(context: TurnContext) {
                 revenue: data.revenue,
                 averageDiscount: data.averageDiscount,
                 // Card message
-                message: `Restocked ${data.productName} with ${product.ReorderLevel} units.`
+                message: `Restocking ${data.productName} placed order for ${data.txtStock ?? 0} units.`
             }
         });
         var responseBody = { statusCode: 200, type: "application/vnd.microsoft.card.adaptive", value: card }
