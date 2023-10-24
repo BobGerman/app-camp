@@ -147,4 +147,36 @@ async function handelTeamsCardActionCancelRestock(context: TurnContext) {
         return CreateInvokeResponse(errorBody);
     }
 }
-export default { COMMAND_ID, handleTeamsMessagingExtensionQuery, handleTeamsCardActionUpdateStock ,handelTeamsCardActionCancelRestock}
+async function handelTeamsCardActionRestock(context: TurnContext) {
+    const request = context.activity.value;
+    const data = request.action.data;
+    if (data.productId) {
+        const product = await getProduct(data.productId);
+        product.UnitsInStock = Number(product.UnitsInStock)+Number(product.ReorderLevel);      
+        await updateProduct(product);
+        var template = new ACData.Template(successCard);    
+        var card = template.expand({
+            $root: {
+                productName:data.productName,
+                unitsInStock:product.UnitsInStock,
+                productId:data.productId,
+                categoryId:data.categoryId,
+                imageUrl:data.imageUrl,
+                supplierName:data.supplierName,
+                supplierCity:data.supplierCity,
+                categoryName:data.categoryName,
+                inventoryStatus:getInventoryStatus(product),
+                unitPrice:data.unitPrice,
+                quantityPerUnit:data.quantityPerUnit,
+                message:`Restocked ${data.productName} with ${product.ReorderLevel} units.`
+            }
+        });
+        var responseBody = { statusCode: 200, type: "application/vnd.microsoft.card.adaptive", value: card }
+        return CreateInvokeResponse(responseBody);
+
+    } else {
+        var errorBody = { statusCode: 200, type: "application/vnd.microsoft.card.adaptive", value: errorCard }
+        return CreateInvokeResponse(errorBody);
+    }
+}
+export default { COMMAND_ID, handleTeamsMessagingExtensionQuery, handleTeamsCardActionUpdateStock ,handelTeamsCardActionRestock,handelTeamsCardActionCancelRestock}

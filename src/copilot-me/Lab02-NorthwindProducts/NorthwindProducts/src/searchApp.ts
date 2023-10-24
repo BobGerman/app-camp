@@ -34,6 +34,9 @@ export class SearchApp extends TeamsActivityHandler {
           case 'ok': {
             return productSearchME.handleTeamsCardActionUpdateStock(context);
           }
+          case 'restock': {
+            return productSearchME.handelTeamsCardActionRestock(context);
+          }
           case 'cancel': {
             return productSearchME.handelTeamsCardActionCancelRestock(context);
           }

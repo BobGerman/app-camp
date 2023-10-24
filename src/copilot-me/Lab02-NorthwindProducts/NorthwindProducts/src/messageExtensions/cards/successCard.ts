@@ -214,6 +214,25 @@ export const successCard =
                   },
                   {
                     "type": "Action.Execute",
+                    "title": "Restock 📦",
+                    "verb": "restock",
+                    "data": {
+                        "productName": "${productName}",
+                        "unitsInStock": "${unitsInStock}",
+                        "productId": "${productId}",
+                        "categoryId": "${categoryId}",
+                        "imageUrl": "${imageUrl}",
+                        "supplierName": "${supplierName}",
+                        "supplierCity": "${supplierCity}",
+                        "categoryName": "${categoryName}",
+                        "inventoryStatus": "${inventoryStatus}",
+                        "unitPrice": "${unitPrice}",
+                        "quantityPerUnit": "${quantityPerUnit}"
+                    },
+                    "style": "positive"
+                },
+                  {
+                    "type": "Action.Execute",
                     "title": "Cancel restock ❌",
                     "verb": "cancel",
                     "data": {
