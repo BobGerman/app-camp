@@ -4,6 +4,7 @@ import {
 
 import { TableClient } from "@azure/data-tables";
 import config from "../config";
+import { getInventoryStatus } from '../messageExtensions/utils';
 
 // NOTE: We're force fitting a relational database into a non-relational database so please
 // forgive the inefficiencies. This is just for demonstration purposes.
@@ -124,10 +125,7 @@ async function getAllProductsEx(): Promise<ProductEx[]> {
         p.SupplierName = suppliers[p.SupplierID].CompanyName;
         p.SupplierCity = suppliers[p.SupplierID].City;
         // 'in stock', 'low stock', 'on order', or 'out of stock'
-        p.InventoryStatus = "In stock";
-        if (p.UnitsInStock == 0) p.InventoryStatus = "Out of stock";
-        if (p.UnitsOnOrder > 0) p.InventoryStatus = "On order";
-        if (p.UnitsInStock < p.ReorderLevel) p.InventoryStatus = "Low stock";    
+        p.InventoryStatus = getInventoryStatus(p);          
         result.push(p);
     }
     return result;

@@ -28,16 +28,23 @@ export class SearchApp extends TeamsActivityHandler {
   // Handle adaptive card action
   public async onInvokeActivity(context: TurnContext): Promise<InvokeResponse> {
     let runEvents = true;
-    try {
-      switch (context.activity.name) {
-        case 'adaptiveCard/action':
-          if(context.activity.value.action.verb === 'ok') {
-          return productSearchME.handleTeamsCardActionInvoke(context);
-          }else{
+    try {     
+      if(context.activity.name==='adaptiveCard/action'){
+        switch (context.activity.value.action.verb) {
+          case 'ok': {
+            return productSearchME.handleTeamsCardActionUpdateStock(context);
+          }
+          case 'restock': {
+            return productSearchME.handelTeamsCardActionRestock(context);
+          }
+          case 'cancel': {
+            return productSearchME.handelTeamsCardActionCancelRestock(context);
+          }
+          default:
             runEvents = false;
             return super.onInvokeActivity(context);
-          }
-        default:
+        }
+      } else {
           runEvents = false;
           return super.onInvokeActivity(context);
       }
@@ -54,14 +61,5 @@ export class SearchApp extends TeamsActivityHandler {
       }
     }
   }
-
-  defaultNextEvent = (context) => {
-    const runDialogs = async () => {
-        await this.handle(context, 'Dialog', async () => {
-            // noop
-        });
-    };
-    return runDialogs;
-}
 }
 
