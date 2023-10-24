@@ -110,7 +110,7 @@ async function handleTeamsCardActionUpdateStock(context: TurnContext) {
                 supplierName: data.supplierName,
                 supplierCity: data.supplierCity,
                 categoryName: data.categoryName,
-                inventoryStatus: data.inventoryStatus,
+                inventoryStatus: getInventoryStatus(product),
                 unitPrice: data.unitPrice,
                 quantityPerUnit: data.quantityPerUnit,
                 // New fields
