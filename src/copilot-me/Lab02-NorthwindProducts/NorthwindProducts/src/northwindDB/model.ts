@@ -63,7 +63,7 @@ export interface Employee extends Row {
 
 export interface OrderDetail extends Row {
     OrderID: number;
-    ProductID: number;
+    ProductID: string;
     UnitPrice: number;
     Quantity: number;
     Discount: number;
@@ -106,7 +106,11 @@ export interface ProductEx extends Product {
     CategoryName: string,
     SupplierName: string,
     SupplierCity: string,
-    InventoryStatus: string
+    InventoryStatus: string,
+    InventoryCost: number,
+    UnitSales: number,
+    Revenue: number,
+    AverageDiscount: number
 }
 export interface Supplier extends Row {
     SupplierID: string;

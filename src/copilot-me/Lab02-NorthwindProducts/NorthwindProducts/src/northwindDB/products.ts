@@ -1,5 +1,5 @@
 import {
-    TABLE_NAME, Product, ProductEx, Supplier, Category
+    TABLE_NAME, Product, ProductEx, Supplier, Category, OrderDetail
 } from './model';
 
 import { TableClient } from "@azure/data-tables";
@@ -8,6 +8,8 @@ import { getInventoryStatus } from '../messageExtensions/utils';
 
 // NOTE: We're force fitting a relational database into a non-relational database so please
 // forgive the inefficiencies. This is just for demonstration purposes.
+
+// #region searchProducts() and supporting functions
 
 export async function searchProducts(productName: string, categoryName: string, inventoryStatus: string,
     supplierCity: string, stockLevel: string): Promise<ProductEx[]> {
@@ -64,6 +66,10 @@ function isInRange(rangeExpression: string, value: number) {
     return result;
 }
 
+// #endregion
+
+// #region Reference data handling
+
 interface ReferenceData<DataType> {
     [index: string]: DataType;
 }
@@ -82,15 +88,54 @@ async function loadReferenceData<DataType>(tableName): Promise<ReferenceData<Dat
 
 }
 
+interface OrderTotals {
+    [productId: string]: {
+        totalQuantity: number,
+        totalRevenue: number,
+        totalDiscount: number
+    }
+}
+
+async function loadOrderTotals(): Promise<OrderTotals> {
+
+    const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.ORDER_DETAIL);
+
+    const entities = tableClient.listEntities();
+
+    let totals: OrderTotals = {};
+    for await (const entity of entities) {
+        const p = entity.ProductID as string;
+        if (!totals[p]) {
+            totals[p] = {
+                totalQuantity: Number(entity.Quantity),
+                totalRevenue: Number(entity.Quantity) * Number(entity.UnitPrice) * (1-Number(entity.Discount)),
+                totalDiscount: Number(entity.Quantity) * Number(entity.UnitPrice) * Number(entity.Discount) 
+            }
+        } else {
+            totals[p].totalQuantity += Number(entity.Quantity);
+            totals[p].totalRevenue += Number(entity.Quantity) * Number(entity.UnitPrice) * (1-Number(entity.Discount));
+            totals[p].totalDiscount += Number(entity.Quantity) * Number(entity.UnitPrice) * Number(entity.Discount);
+        }
+    }
+    return totals;
+
+}
+
 // Reference tables never change in this demo app - so they're cached here
 let categories: ReferenceData<Category> = null;
 let suppliers: ReferenceData<Supplier> = null;
+let orderTotals: OrderTotals = null;
+
+// #endregion
+
+// #region Data Access functions
 
 async function getAllProductsEx(): Promise<ProductEx[]> {
 
     // Ensure reference data are loaded
     categories = categories ?? await loadReferenceData<Category>(TABLE_NAME.CATEGORY);
     suppliers = suppliers ?? await loadReferenceData<Supplier>(TABLE_NAME.SUPPLIER);
+    orderTotals = orderTotals ?? await loadOrderTotals();
 
     // We always read the products fresh in case somebody made a change
     const result: ProductEx[] = [];
@@ -99,6 +144,7 @@ async function getAllProductsEx(): Promise<ProductEx[]> {
     const entities = tableClient.listEntities();
 
     for await (const entity of entities) {
+
         let p: ProductEx = {
             etag: entity.etag as string,
             partitionKey: entity.partitionKey as string,
@@ -118,12 +164,22 @@ async function getAllProductsEx(): Promise<ProductEx[]> {
             CategoryName: "",
             SupplierName: "",
             SupplierCity: "",
-            InventoryStatus: ""
+            InventoryStatus: "",
+            InventoryCost: 0,
+            UnitSales: 0,
+            Revenue: 0,
+            AverageDiscount: 0
         };
+
         // Fill in extended properties
         p.CategoryName = categories[p.CategoryID].CategoryName;
         p.SupplierName = suppliers[p.SupplierID].CompanyName;
         p.SupplierCity = suppliers[p.SupplierID].City;
+        p.UnitSales =  orderTotals[p.ProductID].totalQuantity;
+        p.InventoryCost = p.UnitsInStock * p.UnitPrice;
+        p.Revenue = orderTotals[p.ProductID].totalRevenue;
+        p.AverageDiscount = +(p.Revenue / orderTotals[p.ProductID].totalDiscount).toFixed(1);
+    
         // 'in stock', 'low stock', 'on order', or 'out of stock'
         p.InventoryStatus = getInventoryStatus(p);          
         result.push(p);
@@ -161,6 +217,7 @@ export async function updateProduct(updatedProduct: Product): Promise<void> {
     await tableClient.updateEntity({ ...product, ...updatedProduct }, "Merge");
 }
 
+// #endregion
 
 // #region -- NOT USED, NOT TESTED ---------------------------------------------------------
 

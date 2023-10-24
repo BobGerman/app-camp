@@ -14,6 +14,8 @@ import { CreateInvokeResponse, getInventoryStatus } from './utils';
 
 const COMMAND_ID = "inventorySearch";
 
+// #region Query handling
+
 async function handleTeamsMessagingExtensionQuery(
     context: TurnContext,
     query: MessagingExtensionQuery
@@ -24,8 +26,6 @@ async function handleTeamsMessagingExtensionQuery(
     // Unpack the parameters. From Copilot they'll come in the parameters array; from a human they'll be comma separated
     let [productName, categoryName, inventoryStatus, supplierCity, stockLevel] = (query.parameters[0]?.value.split(','));
 
-    // productName = (query.parameters[0]?.value != null && query.parameters[0].value==="*") ? "" : (query.parameters[0]?.value ?? "");
-
     productName = cleanupParam(query.parameters[0]?.value);
     categoryName ??= cleanupParam(query.parameters[1]?.value);
     inventoryStatus ??= cleanupParam(query.parameters[2]?.value);
@@ -34,7 +34,8 @@ async function handleTeamsMessagingExtensionQuery(
     console.log(`🔎 Processed parameters:\nproductName=${productName}, categoryName=${categoryName}, inventoryStatus=${inventoryStatus}, supplierCity=${supplierCity}, stockLevel=${stockLevel}`);
 
     const products = await searchProducts(productName, categoryName, inventoryStatus, supplierCity, stockLevel);
-
+    
+    console.log(` Found ${products.length} products in the Northwind database`)
     const attachments = [];
     products.forEach((product) => {
         const preview = CardFactory.heroCard(product.ProductName,
@@ -53,7 +54,14 @@ async function handleTeamsMessagingExtensionQuery(
                 categoryName: product.CategoryName,
                 inventoryStatus: product.InventoryStatus,
                 unitPrice: product.UnitPrice,
-                quantityPerUnit: product.QuantityPerUnit
+                quantityPerUnit: product.QuantityPerUnit,
+                // NEW FIELDS
+                unitsOnOrder: product.UnitsOnOrder,
+                reorderLevel: product.ReorderLevel,
+                unitSales: product.UnitSales,
+                inventoryValue: product.InventoryCost,
+                revenue: product.Revenue,
+                averageDiscount: product.AverageDiscount
             }
         });
         const adaptive = CardFactory.adaptiveCard(card);
@@ -81,29 +89,40 @@ function cleanupParam(value: string): string {
     }
 }
 
+//#endregion
 
+// #region Card actions
 async function handleTeamsCardActionUpdateStock(context: TurnContext) {
     const request = context.activity.value;
     const data = request.action.data;
+    console.log(`Handling update stock action ${JSON.stringify(data)}`)
     if (data.txtStock && data.productId) {
         const product = await getProduct(data.productId);
         product.UnitsInStock = data.txtStock;
         await updateProduct(product);
-        var template = new ACData.Template(successCard);    
+        var template = new ACData.Template(successCard);
         var card = template.expand({
             $root: {
                 productName: data.productName,
                 unitsInStock: data.txtStock,
-                productId:  data.productId,
-                categoryId:  data.categoryId,
-                imageUrl:  data.imageUrl,
-                supplierName:  data.supplierName,
-                supplierCity:  data.supplierCity,
-                categoryName:  data.categoryName,
-                inventoryStatus:  data.inventoryStatus,
-                unitPrice:  data.unitPrice,
-                quantityPerUnit:  data.quantityPerUnit,
-                message:`Stock updated for ${data.productName} to ${data.txtStock}!`
+                productId: data.productId,
+                categoryId: data.categoryId,
+                imageUrl: data.imageUrl,
+                supplierName: data.supplierName,
+                supplierCity: data.supplierCity,
+                categoryName: data.categoryName,
+                inventoryStatus: getInventoryStatus(product),
+                unitPrice: data.unitPrice,
+                quantityPerUnit: data.quantityPerUnit,
+                // New fields
+                unitsOnOrder: data.unitsOnOrder,
+                reorderLevel: data.reorderLevel,
+                unitSales: data.unitSales,
+                inventoryValue: data.inventoryValue,
+                revenue: data.revenue,
+                averageDiscount: data.averageDiscount,
+                // Card message
+                message: `Stock updated for ${data.productName} to ${data.txtStock}!`
             }
         });
         var responseBody = { statusCode: 200, type: "application/vnd.microsoft.card.adaptive", value: card }
@@ -117,26 +136,34 @@ async function handleTeamsCardActionUpdateStock(context: TurnContext) {
 async function handelTeamsCardActionCancelRestock(context: TurnContext) {
     const request = context.activity.value;
     const data = request.action.data;
+    console.log(`Handling cancel restock action ${JSON.stringify(data)}`)
     if (data.productId) {
         const product = await getProduct(data.productId);
-        product.ReorderLevel = 0;
         product.UnitsOnOrder = 0;
         await updateProduct(product);
-        var template = new ACData.Template(successCard);    
+        var template = new ACData.Template(successCard);
         var card = template.expand({
             $root: {
-                productName:data.productName,
-                unitsInStock:data.unitsInStock,
-                productId:data.productId,
-                categoryId:data.categoryId,
-                imageUrl:data.imageUrl,
-                supplierName:data.supplierName,
-                supplierCity:data.supplierCity,
-                categoryName:data.categoryName,
-                inventoryStatus:getInventoryStatus(product),
-                unitPrice:data.unitPrice,
-                quantityPerUnit:data.quantityPerUnit,
-                message:`Restock cancelled for ${data.productName}.`
+                productName: data.productName,
+                unitsInStock: data.unitsInStock,
+                productId: data.productId,
+                categoryId: data.categoryId,
+                imageUrl: data.imageUrl,
+                supplierName: data.supplierName,
+                supplierCity: data.supplierCity,
+                categoryName: data.categoryName,
+                inventoryStatus: getInventoryStatus(product),
+                unitPrice: data.unitPrice,
+                quantityPerUnit: data.quantityPerUnit,
+                // New fields
+                unitsOnOrder: product.UnitsOnOrder,
+                reorderLevel: data.reorderLevel,
+                unitSales: data.unitSales,
+                inventoryValue: data.inventoryValue,
+                revenue: data.revenue,
+                averageDiscount: data.averageDiscount,
+                // Card message                
+                message: `Restock cancelled for ${data.productName}.`
             }
         });
         var responseBody = { statusCode: 200, type: "application/vnd.microsoft.card.adaptive", value: card }
@@ -150,25 +177,34 @@ async function handelTeamsCardActionCancelRestock(context: TurnContext) {
 async function handelTeamsCardActionRestock(context: TurnContext) {
     const request = context.activity.value;
     const data = request.action.data;
+    console.log(`Handling restock action ${JSON.stringify(data)}`)
     if (data.productId) {
         const product = await getProduct(data.productId);
-        product.UnitsInStock = Number(product.UnitsInStock)+Number(product.ReorderLevel);      
+        product.UnitsOnOrder = Number(product.UnitsOnOrder) + Number(data.txtStock);
         await updateProduct(product);
-        var template = new ACData.Template(successCard);    
+        var template = new ACData.Template(successCard);
         var card = template.expand({
             $root: {
-                productName:data.productName,
-                unitsInStock:product.UnitsInStock,
-                productId:data.productId,
-                categoryId:data.categoryId,
-                imageUrl:data.imageUrl,
-                supplierName:data.supplierName,
-                supplierCity:data.supplierCity,
-                categoryName:data.categoryName,
-                inventoryStatus:getInventoryStatus(product),
-                unitPrice:data.unitPrice,
-                quantityPerUnit:data.quantityPerUnit,
-                message:`Restocked ${data.productName} with ${product.ReorderLevel} units.`
+                productName: data.productName,
+                unitsInStock: product.UnitsInStock,
+                productId: data.productId,
+                categoryId: data.categoryId,
+                imageUrl: data.imageUrl,
+                supplierName: data.supplierName,
+                supplierCity: data.supplierCity,
+                categoryName: data.categoryName,
+                inventoryStatus: getInventoryStatus(product),
+                unitPrice: data.unitPrice,
+                quantityPerUnit: data.quantityPerUnit,
+                // New fields
+                unitsOnOrder: product.UnitsOnOrder,
+                reorderLevel: data.reorderLevel,
+                unitSales: data.unitSales,
+                inventoryValue: data.inventoryValue,
+                revenue: data.revenue,
+                averageDiscount: data.averageDiscount,
+                // Card message
+                message: `Restocking ${data.productName} placed order for ${data.txtStock ?? 0} units.`
             }
         });
         var responseBody = { statusCode: 200, type: "application/vnd.microsoft.card.adaptive", value: card }
@@ -178,5 +214,7 @@ async function handelTeamsCardActionRestock(context: TurnContext) {
         var errorBody = { statusCode: 200, type: "application/vnd.microsoft.card.adaptive", value: errorCard }
         return CreateInvokeResponse(errorBody);
     }
+
+    // #endregion
 }
-export default { COMMAND_ID, handleTeamsMessagingExtensionQuery, handleTeamsCardActionUpdateStock ,handelTeamsCardActionRestock,handelTeamsCardActionCancelRestock}
+export default { COMMAND_ID, handleTeamsMessagingExtensionQuery, handleTeamsCardActionUpdateStock, handelTeamsCardActionRestock, handelTeamsCardActionCancelRestock }
