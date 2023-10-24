@@ -24,8 +24,6 @@ async function handleTeamsMessagingExtensionQuery(
     // Unpack the parameters. From Copilot they'll come in the parameters array; from a human they'll be comma separated
     let [productName, categoryName, inventoryStatus, supplierCity, stockLevel] = (query.parameters[0]?.value.split(','));
 
-    // productName = (query.parameters[0]?.value != null && query.parameters[0].value==="*") ? "" : (query.parameters[0]?.value ?? "");
-
     productName = cleanupParam(query.parameters[0]?.value);
     categoryName ??= cleanupParam(query.parameters[1]?.value);
     inventoryStatus ??= cleanupParam(query.parameters[2]?.value);
@@ -85,6 +83,7 @@ function cleanupParam(value: string): string {
 async function handleTeamsCardActionUpdateStock(context: TurnContext) {
     const request = context.activity.value;
     const data = request.action.data;
+    console.log (`Handling update stock action ${JSON.stringify(data)}`)
     if (data.txtStock && data.productId) {
         const product = await getProduct(data.productId);
         product.UnitsInStock = data.txtStock;
@@ -117,6 +116,7 @@ async function handleTeamsCardActionUpdateStock(context: TurnContext) {
 async function handelTeamsCardActionCancelRestock(context: TurnContext) {
     const request = context.activity.value;
     const data = request.action.data;
+    console.log (`Handling cancel restock action ${JSON.stringify(data)}`)
     if (data.productId) {
         const product = await getProduct(data.productId);
         product.ReorderLevel = 0;
@@ -150,6 +150,7 @@ async function handelTeamsCardActionCancelRestock(context: TurnContext) {
 async function handelTeamsCardActionRestock(context: TurnContext) {
     const request = context.activity.value;
     const data = request.action.data;
+    console.log (`Handling restock action ${JSON.stringify(data)}`)
     if (data.productId) {
         const product = await getProduct(data.productId);
         product.UnitsInStock = Number(product.UnitsInStock)+Number(product.ReorderLevel);      
