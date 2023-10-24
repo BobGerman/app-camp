@@ -34,7 +34,8 @@ async function handleTeamsMessagingExtensionQuery(
     console.log(`🔎 Processed parameters:\nproductName=${productName}, categoryName=${categoryName}, inventoryStatus=${inventoryStatus}, supplierCity=${supplierCity}, stockLevel=${stockLevel}`);
 
     const products = await searchProducts(productName, categoryName, inventoryStatus, supplierCity, stockLevel);
-
+    
+    console.log(` Found ${products.length} products in the Northwind database`)
     const attachments = [];
     products.forEach((product) => {
         const preview = CardFactory.heroCard(product.ProductName,
