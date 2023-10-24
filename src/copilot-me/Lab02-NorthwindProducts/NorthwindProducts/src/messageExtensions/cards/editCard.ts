@@ -19,7 +19,13 @@ export const editCard = {
                 "categoryName": "${categoryName}",
                 "inventoryStatus": "${inventoryStatus}",
                 "unitPrice": "${unitPrice}",
-                "quantityPerUnit": "${quantityPerUnit}"
+                "quantityPerUnit": "${quantityPerUnit}",
+                "unitsOnOrder": "${unitsOnOrder}",
+                "reorderLevel": "${reorderLevel}",
+                "unitSales": "${unitSales}",
+                "inventoryValue": "${inventoryValue}",
+                "revenue": "${revenue}",
+                "averageDiscount": "${averageDiscount}"
             }
         }
     },
@@ -130,6 +136,10 @@ export const editCard = {
                                     "spacing": "Large",
                                     "facts": [
                                         {
+                                            "title": "Category",
+                                            "value": "${categoryName}"
+                                        },
+                                        {
                                             "title": "Units in stock",
                                             "value": "${unitsInStock}"
                                         },
@@ -142,10 +152,29 @@ export const editCard = {
                                             "value": "${quantityPerUnit}"
                                         },
                                         {
-                                            "title": "Category",
-                                            "value": "${categoryName}"
+                                            "title": "Units on order",
+                                            "value": "${unitsOnOrder}"
                                         },
-
+                                        {
+                                            "title": "Reorder Level",
+                                            "value": "${reorderLevel}"
+                                        },
+                                        {
+                                            "title": "Unit sales/period",
+                                            "value": "${unitSales}"
+                                        },
+                                        {
+                                            "title": "Revenue/period",
+                                            "value": "${revenue}"
+                                        },
+                                        {
+                                            "title": "Inventory value",
+                                            "value": "${inventoryValue}"
+                                        },
+                                        {
+                                            "title": "Average discount",
+                                            "value": "${averageDiscount}"
+                                        }
                                     ],
                                     "separator": true
                                 }
@@ -193,7 +222,13 @@ export const editCard = {
                                             "categoryName": "${categoryName}",
                                             "inventoryStatus": "${inventoryStatus}",
                                             "unitPrice": "${unitPrice}",
-                                            "quantityPerUnit": "${quantityPerUnit}"
+                                            "quantityPerUnit": "${quantityPerUnit}",
+                                            "unitsOnOrder": "${unitsOnOrder}",
+                                            "reorderLevel": "${reorderLevel}",
+                                            "unitSales": "${unitSales}",
+                                            "inventoryValue": "${inventoryValue}",
+                                            "revenue": "${revenue}",
+                                            "averageDiscount": "${averageDiscount}"
                                         },
                                         "style": "positive"
                                     },
@@ -212,7 +247,13 @@ export const editCard = {
                                             "categoryName": "${categoryName}",
                                             "inventoryStatus": "${inventoryStatus}",
                                             "unitPrice": "${unitPrice}",
-                                            "quantityPerUnit": "${quantityPerUnit}"
+                                            "quantityPerUnit": "${quantityPerUnit}",
+                                            "unitsOnOrder": "${unitsOnOrder}",
+                                            "reorderLevel": "${reorderLevel}",
+                                            "unitSales": "${unitSales}",
+                                            "inventoryValue": "${inventoryValue}",
+                                            "revenue": "${revenue}",
+                                            "averageDiscount": "${averageDiscount}"
                                         },
                                         "style": "positive"
                                     },
@@ -231,15 +272,14 @@ export const editCard = {
                                             "categoryName": "${categoryName}",
                                             "inventoryStatus": "${inventoryStatus}",
                                             "unitPrice": "${unitPrice}",
-                                            "quantityPerUnit": "${quantityPerUnit}"
+                                            "quantityPerUnit": "${quantityPerUnit}",
+                                            "unitsOnOrder": "${unitsOnOrder}",
+                                            "reorderLevel": "${reorderLevel}",
+                                            "unitSales": "${unitSales}",
+                                            "inventoryValue": "${inventoryValue}",
+                                            "revenue": "${revenue}",
+                                            "averageDiscount": "${averageDiscount}"
                                         },
-                                        "style": "positive"
-                                    },
-                                    {
-                                        "type": "Action.OpenUrl",
-                                        "title": "Chat 💬",
-                                        "verb": "chat",
-                                        "url": "https://teams.microsoft.com/l/chat/0/0?users=rogerman@microsoft.com",
                                         "style": "positive"
                                     }
                                 ]

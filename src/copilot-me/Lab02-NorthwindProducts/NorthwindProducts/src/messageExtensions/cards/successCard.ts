@@ -20,7 +20,13 @@ export const successCard =
         "categoryName": "${categoryName}",
         "inventoryStatus": "${inventoryStatus}",
         "unitPrice": "${unitPrice}",
-        "quantityPerUnit": "${quantityPerUnit}"
+        "quantityPerUnit": "${quantityPerUnit}",
+        "unitsOnOrder": "${unitsOnOrder}",
+        "reorderLevel": "${reorderLevel}",
+        "unitSales": "${unitSales}",
+        "inventoryValue": "${inventoryValue}",
+        "revenue": "${revenue}",
+        "averageDiscount": "${averageDiscount}"
       }
     }
   },
@@ -145,6 +151,10 @@ export const successCard =
                   "spacing": "Large",
                   "facts": [
                     {
+                      "title": "Category",
+                      "value": "${categoryName}"
+                    },
+                    {
                       "title": "Units in stock",
                       "value": "${unitsInStock}"
                     },
@@ -157,10 +167,29 @@ export const successCard =
                       "value": "${quantityPerUnit}"
                     },
                     {
-                      "title": "Category",
-                      "value": "${categoryName}"
+                      "title": "Units on order",
+                      "value": "${unitsOnOrder}"
                     },
-
+                    {
+                      "title": "Reorder Level",
+                      "value": "${reorderLevel}"
+                    },
+                    {
+                      "title": "Unit sales/period",
+                      "value": "${unitSales}"
+                    },
+                    {
+                      "title": "Revenue/period",
+                      "value": "${revenue}"
+                    },
+                    {
+                      "title": "Inventory value",
+                      "value": "${inventoryValue}"
+                    },
+                    {
+                      "title": "Average discount",
+                      "value": "${averageDiscount}"
+                    }
                   ],
                   "separator": true
                 }
@@ -208,7 +237,13 @@ export const successCard =
                       "categoryName": "${categoryName}",
                       "inventoryStatus": "${inventoryStatus}",
                       "unitPrice": "${unitPrice}",
-                      "quantityPerUnit": "${quantityPerUnit}"
+                      "quantityPerUnit": "${quantityPerUnit}",
+                      "unitsOnOrder": "${unitsOnOrder}",
+                      "reorderLevel": "${reorderLevel}",
+                      "unitSales": "${unitSales}",
+                      "inventoryValue": "${inventoryValue}",
+                      "revenue": "${revenue}",
+                      "averageDiscount": "${averageDiscount}"
                     },
                     "style": "positive"
                   },
@@ -217,20 +252,26 @@ export const successCard =
                     "title": "Restock 📦",
                     "verb": "restock",
                     "data": {
-                        "productName": "${productName}",
-                        "unitsInStock": "${unitsInStock}",
-                        "productId": "${productId}",
-                        "categoryId": "${categoryId}",
-                        "imageUrl": "${imageUrl}",
-                        "supplierName": "${supplierName}",
-                        "supplierCity": "${supplierCity}",
-                        "categoryName": "${categoryName}",
-                        "inventoryStatus": "${inventoryStatus}",
-                        "unitPrice": "${unitPrice}",
-                        "quantityPerUnit": "${quantityPerUnit}"
+                      "productName": "${productName}",
+                      "unitsInStock": "${unitsInStock}",
+                      "productId": "${productId}",
+                      "categoryId": "${categoryId}",
+                      "imageUrl": "${imageUrl}",
+                      "supplierName": "${supplierName}",
+                      "supplierCity": "${supplierCity}",
+                      "categoryName": "${categoryName}",
+                      "inventoryStatus": "${inventoryStatus}",
+                      "unitPrice": "${unitPrice}",
+                      "quantityPerUnit": "${quantityPerUnit}",
+                      "unitsOnOrder": "${unitsOnOrder}",
+                      "reorderLevel": "${reorderLevel}",
+                      "unitSales": "${unitSales}",
+                      "inventoryValue": "${inventoryValue}",
+                      "revenue": "${revenue}",
+                      "averageDiscount": "${averageDiscount}"
                     },
                     "style": "positive"
-                },
+                  },
                   {
                     "type": "Action.Execute",
                     "title": "Cancel restock ❌",
@@ -246,16 +287,13 @@ export const successCard =
                       "categoryName": "${categoryName}",
                       "inventoryStatus": "${inventoryStatus}",
                       "unitPrice": "${unitPrice}",
-                      "quantityPerUnit": "${quantityPerUnit}"
-                    },
-                    "style": "positive"
-                  },
-                  {
-                    "type": "Action.Execute",
-                    "title": "Chat 💬",
-                    "verb": "chat",
-                    "data": {
-                      "productId": "${productId}",
+                      "quantityPerUnit": "${quantityPerUnit}",
+                      "unitsOnOrder": "${unitsOnOrder}",
+                      "reorderLevel": "${reorderLevel}",
+                      "unitSales": "${unitSales}",
+                      "inventoryValue": "${inventoryValue}",
+                      "revenue": "${revenue}",
+                      "averageDiscount": "${averageDiscount}"
                     },
                     "style": "positive"
                   }
