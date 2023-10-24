@@ -9,6 +9,8 @@ import { getInventoryStatus } from '../messageExtensions/utils';
 // NOTE: We're force fitting a relational database into a non-relational database so please
 // forgive the inefficiencies. This is just for demonstration purposes.
 
+// #region searchProducts() and supporting functions
+
 export async function searchProducts(productName: string, categoryName: string, inventoryStatus: string,
     supplierCity: string, stockLevel: string): Promise<ProductEx[]> {
 
@@ -64,6 +66,10 @@ function isInRange(rangeExpression: string, value: number) {
     return result;
 }
 
+// #endregion
+
+// #region Reference data handling
+
 interface ReferenceData<DataType> {
     [index: string]: DataType;
 }
@@ -85,6 +91,10 @@ async function loadReferenceData<DataType>(tableName): Promise<ReferenceData<Dat
 // Reference tables never change in this demo app - so they're cached here
 let categories: ReferenceData<Category> = null;
 let suppliers: ReferenceData<Supplier> = null;
+
+// #endregion
+
+// #region Data Access functions
 
 async function getAllProductsEx(): Promise<ProductEx[]> {
 
@@ -161,6 +171,7 @@ export async function updateProduct(updatedProduct: Product): Promise<void> {
     await tableClient.updateEntity({ ...product, ...updatedProduct }, "Merge");
 }
 
+// #endregion
 
 // #region -- NOT USED, NOT TESTED ---------------------------------------------------------
 

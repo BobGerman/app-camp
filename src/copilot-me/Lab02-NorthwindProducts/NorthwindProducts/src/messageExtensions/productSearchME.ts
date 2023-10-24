@@ -14,6 +14,8 @@ import { CreateInvokeResponse, getInventoryStatus } from './utils';
 
 const COMMAND_ID = "inventorySearch";
 
+// #region Query handling
+
 async function handleTeamsMessagingExtensionQuery(
     context: TurnContext,
     query: MessagingExtensionQuery
@@ -79,7 +81,9 @@ function cleanupParam(value: string): string {
     }
 }
 
+//#endregion
 
+// #region Card actions
 async function handleTeamsCardActionUpdateStock(context: TurnContext) {
     const request = context.activity.value;
     const data = request.action.data;
@@ -179,5 +183,7 @@ async function handelTeamsCardActionRestock(context: TurnContext) {
         var errorBody = { statusCode: 200, type: "application/vnd.microsoft.card.adaptive", value: errorCard }
         return CreateInvokeResponse(errorBody);
     }
+
+    // #endregion
 }
 export default { COMMAND_ID, handleTeamsMessagingExtensionQuery, handleTeamsCardActionUpdateStock ,handelTeamsCardActionRestock,handelTeamsCardActionCancelRestock}
