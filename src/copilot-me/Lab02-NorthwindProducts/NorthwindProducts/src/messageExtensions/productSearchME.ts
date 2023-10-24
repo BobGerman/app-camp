@@ -85,17 +85,24 @@ function cleanupParam(value: string): string {
 async function handleTeamsCardActionInvoke(context: TurnContext) {
     const request = context.activity.value;
     const data = request.action.data;
-    if (data.txtStock && data.pdtId) {
-        const product = await getProduct(data.pdtId);
+    if (data.txtStock && data.productId) {
+        const product = await getProduct(data.productId);
         product.UnitsInStock = data.txtStock;
         await updateProduct(product);
-        var template = new ACData.Template(successCard);
-        const imageGenerator = Math.floor((data.pdtId / 1) % 10);
-        const imgUrl = `https://source.unsplash.com/random/200x200?sig=${imageGenerator}`;
+        var template = new ACData.Template(successCard);    
         var card = template.expand({
             $root: {
-                productName: data.pdtName, unitsInStock: data.txtStock,
-                imageUrl: imgUrl
+                productName: data.productName,
+                unitsInStock: data.txtStock,
+                productId:  data.productId,
+                categoryId:  data.categoryId,
+                imageUrl:  data.imageUrl,
+                supplierName:  data.supplierName,
+                supplierCity:  data.supplierCity,
+                categoryName:  data.categoryName,
+                inventoryStatus:  data.inventoryStatus,
+                unitPrice:  data.unitPrice,
+                quantityPerUnit:  data.quantityPerUnit,
             }
         });
         var responseBody = { statusCode: 200, type: "application/vnd.microsoft.card.adaptive", value: card }
