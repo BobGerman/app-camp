@@ -10,7 +10,7 @@ import { successCard } from './cards/successCard';
 import { errorCard } from './cards/errorCard'
 import * as ACData from "adaptivecards-templating";
 
-import { CreateInvokeResponse } from './utils';
+import { CreateInvokeResponse, getInventoryStatus } from './utils';
 
 const COMMAND_ID = "inventorySearch";
 
@@ -82,7 +82,7 @@ function cleanupParam(value: string): string {
 }
 
 
-async function handleTeamsCardActionInvoke(context: TurnContext) {
+async function handleTeamsCardActionUpdateStock(context: TurnContext) {
     const request = context.activity.value;
     const data = request.action.data;
     if (data.txtStock && data.productId) {
@@ -103,6 +103,7 @@ async function handleTeamsCardActionInvoke(context: TurnContext) {
                 inventoryStatus:  data.inventoryStatus,
                 unitPrice:  data.unitPrice,
                 quantityPerUnit:  data.quantityPerUnit,
+                message:`Stock updated for ${data.productName} to ${data.txtStock}!`
             }
         });
         var responseBody = { statusCode: 200, type: "application/vnd.microsoft.card.adaptive", value: card }
@@ -113,5 +114,37 @@ async function handleTeamsCardActionInvoke(context: TurnContext) {
         return CreateInvokeResponse(errorBody);
     }
 }
+async function handelTeamsCardActionCancelRestock(context: TurnContext) {
+    const request = context.activity.value;
+    const data = request.action.data;
+    if (data.productId) {
+        const product = await getProduct(data.productId);
+        product.ReorderLevel = 0;
+        product.UnitsOnOrder = 0;
+        await updateProduct(product);
+        var template = new ACData.Template(successCard);    
+        var card = template.expand({
+            $root: {
+                productName:data.productName,
+                unitsInStock:data.unitsInStock,
+                productId:data.productId,
+                categoryId:data.categoryId,
+                imageUrl:data.imageUrl,
+                supplierName:data.supplierName,
+                supplierCity:data.supplierCity,
+                categoryName:data.categoryName,
+                inventoryStatus:getInventoryStatus(product),
+                unitPrice:data.unitPrice,
+                quantityPerUnit:data.quantityPerUnit,
+                message:`Restock cancelled for ${data.productName}.`
+            }
+        });
+        var responseBody = { statusCode: 200, type: "application/vnd.microsoft.card.adaptive", value: card }
+        return CreateInvokeResponse(responseBody);
 
-export default { COMMAND_ID, handleTeamsMessagingExtensionQuery, handleTeamsCardActionInvoke }
+    } else {
+        var errorBody = { statusCode: 200, type: "application/vnd.microsoft.card.adaptive", value: errorCard }
+        return CreateInvokeResponse(errorBody);
+    }
+}
+export default { COMMAND_ID, handleTeamsMessagingExtensionQuery, handleTeamsCardActionUpdateStock ,handelTeamsCardActionCancelRestock}

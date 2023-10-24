@@ -9,9 +9,17 @@ export const editCard = {
             "verb": "refresh",
             "title": "Refresh",
             "data": {
-                "pdtId": "${productId}",
-                "pdtName": "${productName}",
-                "categoryId": "${categoryId}"
+                "productName": "${productName}",
+                "unitsInStock": "${unitsInStock}",
+                "productId": "${productId}",
+                "categoryId": "${categoryId}",
+                "imageUrl": "${imageUrl}",
+                "supplierName": "${supplierName}",
+                "supplierCity": "${supplierCity}",
+                "categoryName": "${categoryName}",
+                "inventoryStatus": "${inventoryStatus}",
+                "unitPrice": "${unitPrice}",
+                "quantityPerUnit": "${quantityPerUnit}"
             }
         }
     },
@@ -57,15 +65,10 @@ export const editCard = {
             ],
             "bleed": true
         },
-
         {
             "type": "Container",
             "style": "emphasis",
             "items": [
-
-
-
-
                 {
                     "type": "TextBlock",
                     "weight": "Bolder",
@@ -110,7 +113,6 @@ export const editCard = {
                     "weight": "Bolder",
                     "text": "**🛒 Stock information**",
                     "wrap": true,
-
                     "size": "Medium",
                     "isSubtle": false
                 },
@@ -153,7 +155,6 @@ export const editCard = {
                     ]
                 }]
         },
-
         {
             "type": "Container",
             "items": [
@@ -201,17 +202,25 @@ export const editCard = {
                                         "title": "Cancel restock ❌",
                                         "verb": "cancel",
                                         "data": {
-                                            "productId": "${productId}"
+                                            "productName": "${productName}",
+                                            "unitsInStock": "${unitsInStock}",
+                                            "productId": "${productId}",
+                                            "categoryId": "${categoryId}",
+                                            "imageUrl": "${imageUrl}",
+                                            "supplierName": "${supplierName}",
+                                            "supplierCity": "${supplierCity}",
+                                            "categoryName": "${categoryName}",
+                                            "inventoryStatus": "${inventoryStatus}",
+                                            "unitPrice": "${unitPrice}",
+                                            "quantityPerUnit": "${quantityPerUnit}"
                                         },
                                         "style": "positive"
                                     },
                                     {
-                                        "type": "Action.Execute",
+                                        "type": "Action.OpenUrl",
                                         "title": "Chat 💬",
                                         "verb": "chat",
-                                        "data": {
-                                            "productId": "${productId}"
-                                        },
+                                        "url": "https://teams.microsoft.com/l/chat/0/0?users=rogerman@microsoft.com",
                                         "style": "positive"
                                     }
                                 ]
