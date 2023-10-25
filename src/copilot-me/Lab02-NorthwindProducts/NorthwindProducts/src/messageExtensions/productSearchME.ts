@@ -98,8 +98,8 @@ async function handleTeamsCardActionUpdateStock(context: TurnContext) {
     console.log(`Handling update stock action ${JSON.stringify(data)}`)
     if (data.txtStock && data.productId) {
         const product = await getProduct(data.productId);
-        product.UnitsInStock = data.txtStock;
-        product.UnitsOnOrder = 0;
+        product.UnitsInStock = Number(product.UnitsInStock)+Number(data.txtStock);
+        product.UnitsOnOrder = Number(data.unitsOnOrder)-Number(data.txtStock);
         await updateProduct(product);
         var template = new ACData.Template(successCard);
         var card = template.expand({
@@ -116,7 +116,7 @@ async function handleTeamsCardActionUpdateStock(context: TurnContext) {
                 unitPrice: data.unitPrice,
                 quantityPerUnit: data.quantityPerUnit,
                 // New fields
-                unitsOnOrder: 0,
+                unitsOnOrder: Number(data.unitsOnOrder)-Number(data.txtStock),
                 reorderLevel: data.reorderLevel,
                 unitSales: data.unitSales,
                 inventoryValue: data.inventoryValue,

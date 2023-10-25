@@ -244,8 +244,7 @@ export const successCard =
                       "inventoryValue": "${inventoryValue}",
                       "revenue": "${revenue}",
                       "averageDiscount": "${averageDiscount}"
-                    },
-                    "style": "positive"
+                    }
                   },
                   {
                     "type": "Action.Execute",
@@ -269,8 +268,7 @@ export const successCard =
                       "inventoryValue": "${inventoryValue}",
                       "revenue": "${revenue}",
                       "averageDiscount": "${averageDiscount}"
-                    },
-                    "style": "positive"
+                    }
                   },
                   {
                     "type": "Action.Execute",
@@ -294,8 +292,7 @@ export const successCard =
                       "inventoryValue": "${inventoryValue}",
                       "revenue": "${revenue}",
                       "averageDiscount": "${averageDiscount}"
-                    },
-                    "style": "positive"
+                    }
                   }
                 ]
               }
