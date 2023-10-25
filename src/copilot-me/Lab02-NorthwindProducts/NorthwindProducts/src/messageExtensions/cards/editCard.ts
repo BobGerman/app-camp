@@ -229,8 +229,7 @@ export const editCard = {
                                             "inventoryValue": "${inventoryValue}",
                                             "revenue": "${revenue}",
                                             "averageDiscount": "${averageDiscount}"
-                                        },
-                                        "style": "positive"
+                                        }
                                     },
                                     {
                                         "type": "Action.Execute",
@@ -254,8 +253,8 @@ export const editCard = {
                                             "inventoryValue": "${inventoryValue}",
                                             "revenue": "${revenue}",
                                             "averageDiscount": "${averageDiscount}"
-                                        },
-                                        "style": "positive"
+                                        }
+                                        
                                     },
                                     {
                                         "type": "Action.Execute",
@@ -279,8 +278,7 @@ export const editCard = {
                                             "inventoryValue": "${inventoryValue}",
                                             "revenue": "${revenue}",
                                             "averageDiscount": "${averageDiscount}"
-                                        },
-                                        "style": "positive"
+                                        }
                                     }
                                 ]
                             }
