@@ -98,14 +98,16 @@ async function handleTeamsCardActionUpdateStock(context: TurnContext) {
     console.log(`Handling update stock action ${JSON.stringify(data)}`)
     if (data.txtStock && data.productId) {
         const product = await getProduct(data.productId);
-        product.UnitsInStock = Number(product.UnitsInStock)+Number(data.txtStock);
-        product.UnitsOnOrder = Number(data.unitsOnOrder)-Number(data.txtStock);
+        const newUnitsInStock = Number(product.UnitsInStock)+Number(data.txtStock);
+        const newUnitsOnOrder =  Number(product.UnitsOnOrder)-Number(data.txtStock);    
+        product.UnitsInStock=newUnitsInStock;
+        product.UnitsOnOrder=newUnitsOnOrder;
         await updateProduct(product);
         var template = new ACData.Template(successCard);
         var card = template.expand({
             $root: {
                 productName: data.productName,
-                unitsInStock: data.txtStock,
+                unitsInStock: newUnitsInStock,
                 productId: data.productId,
                 categoryId: data.categoryId,
                 imageUrl: data.imageUrl,
@@ -116,14 +118,14 @@ async function handleTeamsCardActionUpdateStock(context: TurnContext) {
                 unitPrice: data.unitPrice,
                 quantityPerUnit: data.quantityPerUnit,
                 // New fields
-                unitsOnOrder: Number(data.unitsOnOrder)-Number(data.txtStock),
+                unitsOnOrder: newUnitsOnOrder,
                 reorderLevel: data.reorderLevel,
                 unitSales: data.unitSales,
                 inventoryValue: data.inventoryValue,
                 revenue: data.revenue,
                 averageDiscount: data.averageDiscount,
                 // Card message
-                message: `Stock updated for ${data.productName} to ${data.txtStock}!`
+                message: `Stock updated for ${data.productName} to ${newUnitsInStock}!`
             }
         });
         var responseBody = { statusCode: 200, type: "application/vnd.microsoft.card.adaptive", value: card }
