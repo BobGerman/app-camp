@@ -2,7 +2,7 @@
   "Suppliers": [
     {
       "SupplierID": 1,
-      "CompanyName": "Exotic Liquids",
+      "CompanyName": "Contoso Beverage Company",
       "ContactName": "Charlotte Cooper",
       "ContactTitle": "Purchasing Manager",
       "Address": "49 Gilbert St.",
