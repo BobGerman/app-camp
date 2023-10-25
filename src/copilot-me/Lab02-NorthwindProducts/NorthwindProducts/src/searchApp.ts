@@ -28,7 +28,7 @@ export class SearchApp extends TeamsActivityHandler {
   // Handle adaptive card action
   public async onInvokeActivity(context: TurnContext): Promise<InvokeResponse> {
     let runEvents = true;
-    console.log (`🎬 Invoke activity received: ${context.activity.name}`);
+    // console.log (`🎬 Invoke activity received: ${context.activity.name}`);
     try {     
       if(context.activity.name==='adaptiveCard/action'){
         switch (context.activity.value.action.verb) {

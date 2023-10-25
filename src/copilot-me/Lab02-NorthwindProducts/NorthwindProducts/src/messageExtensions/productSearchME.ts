@@ -16,12 +16,13 @@ const COMMAND_ID = "inventorySearch";
 
 // #region Query handling
 
+let queryCount = 0;
 async function handleTeamsMessagingExtensionQuery(
     context: TurnContext,
     query: MessagingExtensionQuery
 ): Promise<MessagingExtensionResponse> {
 
-    console.log(`🔍 Query JSON:\n${JSON.stringify(query)}`);
+    // console.log(`🔍 Query JSON:\n${JSON.stringify(query)}`);
 
     // Unpack the parameters. From Copilot they'll come in the parameters array; from a human they'll be comma separated
     let [productName, categoryName, inventoryStatus, supplierCity, stockLevel] = (query.parameters[0]?.value.split(','));
@@ -31,11 +32,11 @@ async function handleTeamsMessagingExtensionQuery(
     inventoryStatus ??= cleanupParam(query.parameters[2]?.value);
     supplierCity ??= cleanupParam(query.parameters[3]?.value);
     stockLevel ??= cleanupParam(query.parameters[4]?.value);
-    console.log(`🔎 Processed parameters:\nproductName=${productName}, categoryName=${categoryName}, inventoryStatus=${inventoryStatus}, supplierCity=${supplierCity}, stockLevel=${stockLevel}`);
+    console.log(`🔎 Query #${++queryCount}:\nproductName=${productName}, categoryName=${categoryName}, inventoryStatus=${inventoryStatus}, supplierCity=${supplierCity}, stockLevel=${stockLevel}`);
 
     const products = await searchProducts(productName, categoryName, inventoryStatus, supplierCity, stockLevel);
 
-    console.log(` Found ${products.length} products in the Northwind database`)
+    console.log(`Found ${products.length} products in the Northwind database`)
     const attachments = [];
     products.forEach((product) => {
         const preview = CardFactory.heroCard(product.ProductName,
@@ -95,7 +96,7 @@ function cleanupParam(value: string): string {
 async function handleTeamsCardActionUpdateStock(context: TurnContext) {
     const request = context.activity.value;
     const data = request.action.data;
-    console.log(`Handling update stock action ${JSON.stringify(data)}`)
+    console.log(`🎬 Handling update stock action, quantity=${data.txtStock}`);
     if (data.txtStock && data.productId) {
         const product = await getProduct(data.productId);
         product.UnitsInStock = Number(data.txtStock);
@@ -140,7 +141,7 @@ async function handleTeamsCardActionUpdateStock(context: TurnContext) {
 async function handelTeamsCardActionCancelRestock(context: TurnContext) {
     const request = context.activity.value;
     const data = request.action.data;
-    console.log(`Handling cancel restock action ${JSON.stringify(data)}`)
+    console.log(`🎬 Handling cancel restock action`)
     if (data.productId) {
         const product = await getProduct(data.productId);
         product.UnitsOnOrder = 0;
@@ -181,7 +182,7 @@ async function handelTeamsCardActionCancelRestock(context: TurnContext) {
 async function handelTeamsCardActionRestock(context: TurnContext) {
     const request = context.activity.value;
     const data = request.action.data;
-    console.log(`Handling restock action ${JSON.stringify(data)}`)
+    console.log(`🎬 Handling restock action, quantity=${data.txtStock}`)
     if (data.productId) {
         const product = await getProduct(data.productId);
         product.UnitsOnOrder = Number(product.UnitsOnOrder) + Number(data.txtStock);

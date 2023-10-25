@@ -24,7 +24,7 @@ export async function searchProducts(productName: string, categoryName: string, 
         result = result.filter((p) => p.CategoryName.toLowerCase().startsWith(categoryName.toLowerCase()));
     }
     if (inventoryStatus) {
-        result = result.filter((p) => p.InventoryStatus.toLowerCase().startsWith(inventoryStatus.toLowerCase()));
+        result = result.filter((p) => isMatchingStatus(inventoryStatus, p));
     }
     if (supplierCity) {
         result = result.filter((p) => p.SupplierCity.toLowerCase().startsWith(supplierCity.toLowerCase()));
@@ -34,6 +34,26 @@ export async function searchProducts(productName: string, categoryName: string, 
     }
 
     return result;
+}
+
+// Returns true if the inventory status in a product matches the query using
+// the inventory data rather than just a text match for better accuracy
+function isMatchingStatus(inventoryStatusQuery: string, product: ProductEx): boolean {
+
+    const query = inventoryStatusQuery.toLowerCase();
+    if (query.startsWith("out")) {
+        // Out of stock
+        return product.UnitsInStock === 0;
+    } else if (query.startsWith("low")) {
+        // Low stock
+        return product.UnitsInStock <= product.ReorderLevel;
+    } else if (query.startsWith("on")) {
+        // On order
+        return product.UnitsOnOrder > 0;
+    } else {
+        // In stock
+        return product.UnitsInStock > 0;
+    }
 }
 
 // Used to filter based on a range entered in the stockLevel parameter

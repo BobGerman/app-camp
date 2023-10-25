@@ -2,7 +2,7 @@
   "Suppliers": [
     {
       "SupplierID": 1,
-      "CompanyName": "Exotic Liquids",
+      "CompanyName": "Contoso Beverage Company",
       "ContactName": "Charlotte Cooper",
       "ContactTitle": "Purchasing Manager",
       "Address": "49 Gilbert St.",
@@ -34,12 +34,12 @@
       "ContactName": "Regina Murphy",
       "ContactTitle": "Sales Representative",
       "Address": "707 Oxford Rd.",
-      "City": "Ann Arbor",
-      "Region": "MI",
-      "PostalCode": "48104",
-      "Country": "USA",
-      "Phone": "(313) 555-5735",
-      "Fax": "(313) 555-3349",
+      "City": "London",
+      "Region": null,
+      "PostalCode": "EC1 4SD",
+      "Country": "UK",
+      "Phone": "(171) 555-3333",
+      "Fax": null,
       "HomePage": null
     },
     {

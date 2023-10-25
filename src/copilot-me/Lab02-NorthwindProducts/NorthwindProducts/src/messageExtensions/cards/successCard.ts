@@ -207,7 +207,7 @@ export const successCard =
           "actions": [
             {
               "type": "Action.ShowCard",
-              "title": "Do more",
+              "title": "Take action",
               "card": {
                 "type": "AdaptiveCard",
                 "body": [
