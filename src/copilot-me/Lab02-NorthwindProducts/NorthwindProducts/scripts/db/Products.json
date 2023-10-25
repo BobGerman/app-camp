@@ -8,9 +8,9 @@
       "CategoryID": 1,
       "QuantityPerUnit": "10 boxes x 20 bags",
       "UnitPrice": 18,
-      "UnitsInStock": 39,
+      "UnitsInStock": 8,
       "UnitsOnOrder": 0,
-      "ReorderLevel": 10,
+      "ReorderLevel": 25,
       "Discontinued": false
     },
     {
@@ -21,7 +21,7 @@
       "QuantityPerUnit": "24 - 12 oz bottles",
       "UnitPrice": 19,
       "UnitsInStock": 17,
-      "UnitsOnOrder": 40,
+      "UnitsOnOrder": 0,
       "ReorderLevel": 25,
       "Discontinued": false
     },
@@ -33,7 +33,7 @@
       "QuantityPerUnit": "12 - 550 ml bottles",
       "UnitPrice": 10,
       "UnitsInStock": 13,
-      "UnitsOnOrder": 70,
+      "UnitsOnOrder": 0,
       "ReorderLevel": 25,
       "Discontinued": false
     },

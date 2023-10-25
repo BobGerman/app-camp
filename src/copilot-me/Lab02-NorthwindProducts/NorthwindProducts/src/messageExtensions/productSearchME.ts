@@ -99,6 +99,7 @@ async function handleTeamsCardActionUpdateStock(context: TurnContext) {
     if (data.txtStock && data.productId) {
         const product = await getProduct(data.productId);
         product.UnitsInStock = data.txtStock;
+        product.UnitsOnOrder = 0;
         await updateProduct(product);
         var template = new ACData.Template(successCard);
         var card = template.expand({
@@ -115,7 +116,7 @@ async function handleTeamsCardActionUpdateStock(context: TurnContext) {
                 unitPrice: data.unitPrice,
                 quantityPerUnit: data.quantityPerUnit,
                 // New fields
-                unitsOnOrder: data.unitsOnOrder,
+                unitsOnOrder: 0,
                 reorderLevel: data.reorderLevel,
                 unitSales: data.unitSales,
                 inventoryValue: data.inventoryValue,
