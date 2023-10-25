@@ -24,7 +24,7 @@ Azure sign-in isn't needed unless you want to deploy the solution to Azure (whic
 In one console, run
 
 ~~~sh
-npm start storage
+npm run storage
 ~~~
 
 While this is running, in a second console run:
