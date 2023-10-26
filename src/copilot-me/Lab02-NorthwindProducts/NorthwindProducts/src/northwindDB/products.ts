@@ -96,7 +96,7 @@ interface ReferenceData<DataType> {
 
 async function loadReferenceData<DataType>(tableName): Promise<ReferenceData<DataType>> {
 
-    const tableClient = TableClient.fromConnectionString(config.tableConnectionString, tableName);
+    const tableClient = TableClient.fromConnectionString(config.storageAccountConnectionString, tableName);
 
     const entities = tableClient.listEntities();
 
@@ -118,7 +118,7 @@ interface OrderTotals {
 
 async function loadOrderTotals(): Promise<OrderTotals> {
 
-    const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.ORDER_DETAIL);
+    const tableClient = TableClient.fromConnectionString(config.storageAccountConnectionString, TABLE_NAME.ORDER_DETAIL);
 
     const entities = tableClient.listEntities();
 
@@ -159,7 +159,7 @@ async function getAllProductsEx(): Promise<ProductEx[]> {
 
     // We always read the products fresh in case somebody made a change
     const result: ProductEx[] = [];
-    const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.PRODUCT);
+    const tableClient = TableClient.fromConnectionString(config.storageAccountConnectionString, TABLE_NAME.PRODUCT);
 
     const entities = tableClient.listEntities();
 
@@ -209,7 +209,7 @@ async function getAllProductsEx(): Promise<ProductEx[]> {
 
 export async function getProducts(startsWith: string): Promise<Product[]> {
 
-    const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.PRODUCT);
+    const tableClient = TableClient.fromConnectionString(config.storageAccountConnectionString, TABLE_NAME.PRODUCT);
 
     const entities = tableClient.listEntities();
 
@@ -223,13 +223,13 @@ export async function getProducts(startsWith: string): Promise<Product[]> {
 }
 
 export async function getProduct(productId: number): Promise<Product> {
-    const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.PRODUCT);
+    const tableClient = TableClient.fromConnectionString(config.storageAccountConnectionString, TABLE_NAME.PRODUCT);
     const product = await tableClient.getEntity(TABLE_NAME.PRODUCT, productId.toString()) as Product;
     return product;
 }
 
 export async function updateProduct(updatedProduct: Product): Promise<void> {
-    const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.PRODUCT);
+    const tableClient = TableClient.fromConnectionString(config.storageAccountConnectionString, TABLE_NAME.PRODUCT);
     const product = await tableClient.getEntity(TABLE_NAME.PRODUCT, updatedProduct.ProductID.toString()) as Product;
     if (!product) {
         throw new Error("Product not found");
@@ -247,12 +247,12 @@ export async function updateProduct(updatedProduct: Product): Promise<void> {
 //         rowKey: product.ProductID,
 //         ...product,
 //     }
-//     const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.PRODUCT);
+//     const tableClient = TableClient.fromConnectionString(config.storageAccountConnectionString, TABLE_NAME.PRODUCT);
 //     await tableClient.createEntity(newProduct);
 // };
 
 // export async function deleteProduct (productId: number): Promise<void> {
-//     const tableClient = TableClient.fromConnectionString(config.tableConnectionString, TABLE_NAME.PRODUCT);
+//     const tableClient = TableClient.fromConnectionString(config.storageAccountConnectionString, TABLE_NAME.PRODUCT);
 //     await tableClient.deleteEntity(TABLE_NAME.PRODUCT, productId.toString());
 // };
 

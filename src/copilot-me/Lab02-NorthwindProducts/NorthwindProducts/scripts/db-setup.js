@@ -1,9 +1,12 @@
 const { TableClient, TableServiceClient } = require("@azure/data-tables");
 const { randomUUID } = require("crypto");
 const fs = require("fs");
+const { connect } = require("http2");
 const path = require("path");
 
 (async () => {
+    const connectionString = process.argv[2] ? process.argv[2] : "UseDevelopmentStorage=true";
+    const reset = process.argv[3] === "--reset" || process.argv[3] === "-r" ? true : false;
 
     const COUNTRY_CODES = {
         "australia": "au",
@@ -26,12 +29,37 @@ const path = require("path");
     // Get a flag image URL given a country name
     // Thanks to https://flagpedia.net for providing flag images
     function getFlagUrl(country) {
-
         return `https://flagcdn.com/32x24/${COUNTRY_CODES[country.toLowerCase()]}.png`;
-
     };
 
-    const tableServiceClient = TableServiceClient.fromConnectionString("UseDevelopmentStorage=true");
+    async function getTables(tableServiceClient) {
+        let tables = [];
+        for await (const table of tableServiceClient.listTables()) {
+            tables.push(table.name)
+        }
+        return tables;
+    }
+
+    const tableServiceClient = TableServiceClient.fromConnectionString(connectionString);
+
+    if (reset) {
+        const tables = await getTables(tableServiceClient);
+        tables.forEach(async table => {
+            const tableClient = TableClient.fromConnectionString(connectionString, table);
+            console.log(`Deleting table: ${table}`);
+            await tableClient.deleteTable();
+        });
+        let tablesExist = true;
+        while (tablesExist) {
+            console.log("Waiting for tables to be deleted...");
+            const tables = await getTables(tableServiceClient);
+            if (tables.length === 0) {
+                tablesExist = false;
+                console.log("All tables deleted.");
+            }
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+    }
 
     const tables = ["Categories", "Customers", "Employees", "Orders", "OrderDetails", "Products", "Suppliers"];
     const rowKeyColumnNames = ["CategoryID", "CustomerID", "EmployeeID", "OrderID", null, "ProductID", "SupplierID"];
@@ -39,16 +67,19 @@ const path = require("path");
     const generateFlag = [false, true, false, false, false, false, true];
 
     tables.forEach(async (table) => {
-        await tableServiceClient.deleteTable(table);
-        console.log(`Deleted table: ${table}`);
-    })
-    tables.forEach(async (table) => {
+        const tables = await getTables(tableServiceClient);
+        if (tables.includes(table)) {
+            console.log(`Table ${table} already exists, skipping...`);
+            return;
+        }
+        
         const rowKeyColumnName = rowKeyColumnNames[tables.indexOf(table)];
         const needImage = generateImage[tables.indexOf(table)];
         const needFlag = generateFlag[tables.indexOf(table)];
-
+        
+        console.log(`Creating table: ${table}`);
         await tableServiceClient.createTable(table);
-        const tableClient = TableClient.fromConnectionString("UseDevelopmentStorage=true", table);
+        const tableClient = TableClient.fromConnectionString(connectionString, table);
         const jsonString = fs.readFileSync(path.resolve(__dirname, "db", `${table}.json`), "utf8");
         const entities = JSON.parse(jsonString);
         for (const entity of entities[table]) {
