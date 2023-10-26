@@ -1,7 +1,6 @@
 const { TableClient, TableServiceClient } = require("@azure/data-tables");
 const { randomUUID } = require("crypto");
 const fs = require("fs");
-const { connect } = require("http2");
 const path = require("path");
 
 (async () => {
@@ -72,13 +71,27 @@ const path = require("path");
             console.log(`Table ${table} already exists, skipping...`);
             return;
         }
-        
+
         const rowKeyColumnName = rowKeyColumnNames[tables.indexOf(table)];
         const needImage = generateImage[tables.indexOf(table)];
         const needFlag = generateFlag[tables.indexOf(table)];
-        
+
         console.log(`Creating table: ${table}`);
-        await tableServiceClient.createTable(table);
+        let tableCreated = false;
+        while (!tableCreated) {
+            try {
+                await tableServiceClient.createTable(table);
+                tableCreated = true;
+            } catch (err) {
+                if (err.statusCode === 409) {
+                    console.log('Table is marked for deletion, retrying in 5 seconds...');
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+                } else {
+                    throw err;
+                }
+            }
+        }
+
         const tableClient = TableClient.fromConnectionString(connectionString, table);
         const jsonString = fs.readFileSync(path.resolve(__dirname, "db", `${table}.json`), "utf8");
         const entities = JSON.parse(jsonString);
