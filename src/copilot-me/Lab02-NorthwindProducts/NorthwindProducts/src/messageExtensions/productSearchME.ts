@@ -22,8 +22,6 @@ async function handleTeamsMessagingExtensionQuery(
     query: MessagingExtensionQuery
 ): Promise<MessagingExtensionResponse> {
 
-    // console.log(`🔍 Query JSON:\n${JSON.stringify(query)}`);
-
     // Unpack the parameters. From Copilot they'll come in the parameters array; from a human they'll be comma separated
     let [productName, categoryName, inventoryStatus, supplierCity, stockLevel] = (query.parameters[0]?.value.split(','));
 
@@ -56,7 +54,6 @@ async function handleTeamsMessagingExtensionQuery(
                 inventoryStatus: product.InventoryStatus,
                 unitPrice: product.UnitPrice,
                 quantityPerUnit: product.QuantityPerUnit,
-                // NEW FIELDS
                 unitsOnOrder: product.UnitsOnOrder,
                 reorderLevel: product.ReorderLevel,
                 unitSales: product.UnitSales,
@@ -94,17 +91,18 @@ function cleanupParam(value: string): string {
 
 // #region Card actions
 async function handleTeamsCardActionUpdateStock(context: TurnContext) {
+
     const request = context.activity.value;
     const data = request.action.data;
+
     console.log(`🎬 Handling update stock action, quantity=${data.txtStock}`);
+
     if (data.txtStock && data.productId) {
+        
         const product = await getProduct(data.productId);
         product.UnitsInStock = Number(data.txtStock);
-        // const newUnitsInStock = Number(product.UnitsInStock)+Number(data.txtStock);
-        // const newUnitsOnOrder =  Number(product.UnitsOnOrder)-Number(data.txtStock);    
-        // product.UnitsInStock=newUnitsInStock;
-        // product.UnitsOnOrder=newUnitsOnOrder;
         await updateProduct(product);
+
         var template = new ACData.Template(successCard);
         var card = template.expand({
             $root: {
@@ -119,8 +117,7 @@ async function handleTeamsCardActionUpdateStock(context: TurnContext) {
                 inventoryStatus: getInventoryStatus(product),
                 unitPrice: data.unitPrice,
                 quantityPerUnit: data.quantityPerUnit,
-                // New fields
-                unitsOnOrder: data.unitsOnOrder,// newUnitsOnOrder,
+                unitsOnOrder: data.unitsOnOrder,
                 reorderLevel: data.reorderLevel,
                 unitSales: data.unitSales,
                 inventoryValue: product.UnitsInStock * product.UnitPrice,
@@ -160,7 +157,6 @@ async function handelTeamsCardActionCancelRestock(context: TurnContext) {
                 inventoryStatus: getInventoryStatus(product),
                 unitPrice: data.unitPrice,
                 quantityPerUnit: data.quantityPerUnit,
-                // New fields
                 unitsOnOrder: product.UnitsOnOrder,
                 reorderLevel: data.reorderLevel,
                 unitSales: data.unitSales,
@@ -201,7 +197,6 @@ async function handelTeamsCardActionRestock(context: TurnContext) {
                 inventoryStatus: getInventoryStatus(product),
                 unitPrice: data.unitPrice,
                 quantityPerUnit: data.quantityPerUnit,
-                // New fields
                 unitsOnOrder: product.UnitsOnOrder,
                 reorderLevel: data.reorderLevel,
                 unitSales: data.unitSales,
