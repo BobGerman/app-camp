@@ -65,14 +65,14 @@ const path = require("path");
     const generateImage = [false, true, false, false, false, true, true];
     const generateFlag = [false, true, false, false, false, false, true];
 
-    tables.forEach(async (table) => {
+    tables.forEach(async (table,index) => {
         const tables = await getTables(tableServiceClient);
         if (tables.includes(table)) {
             console.log(`Table ${table} already exists, skipping...`);
             return;
         }
 
-        const rowKeyColumnName = rowKeyColumnNames[tables.indexOf(table)];
+        //const rowKeyColumnName = rowKeyColumnNames[tables.indexOf(table)];
         const needImage = generateImage[tables.indexOf(table)];
         const needFlag = generateFlag[tables.indexOf(table)];
 
@@ -96,6 +96,7 @@ const path = require("path");
         const jsonString = fs.readFileSync(path.resolve(__dirname, "db", `${table}.json`), "utf8");
         const entities = JSON.parse(jsonString);
         for (const entity of entities[table]) {
+            const rowKeyColumnName = rowKeyColumnNames[index];
             const rowKey = rowKeyColumnName ? entity[rowKeyColumnName].toString() : randomUUID();
             console.log(`Added entity to ${table} with key ${rowKey}`);
 
