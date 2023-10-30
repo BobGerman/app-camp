@@ -72,9 +72,6 @@ const path = require("path");
             return;
         }
 
-        const needImage = generateImage[tables.indexOf(table)];
-        const needFlag = generateFlag[tables.indexOf(table)];
-
         console.log(`Creating table: ${table}`);
         let tableCreated = false;
         while (!tableCreated) {
@@ -100,11 +97,11 @@ const path = require("path");
             console.log(`Added entity to ${table} with key ${rowKey}`);
 
             // If we're on a table that needs an image and one wasn't in the JSON, make a random one
-            if (needImage && !entity["ImageUrl"]) {
+            if (generateImage[index] && !("ImageURL" in entity)) {
                 entity["ImageUrl"] = `https://picsum.photos/seed/${rowKey}/200/300`;
             }
             // If we're on a table that needs a flag image, make it here
-            if (needFlag) {
+            if (generateFlag[index]) {
                 entity["FlagUrl"] = getFlagUrl(entity["Country"]);
             }
             await tableClient.createEntity({
