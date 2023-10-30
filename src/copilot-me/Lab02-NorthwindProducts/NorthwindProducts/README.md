@@ -86,16 +86,18 @@ Add to .env.local.user:
 SECRET_STORAGE_ACCOUNT_CONNECTION_STRING=UseDevelopmentStorage=true
 ~~~
 
-To reset local database in Azurite
+## Reset database
+
+### Local
 
 1. `npm run storage`
 2. `node .\scripts\db-setup.js "UseDevelopmentStorage=true" --reset`
 
-To reset remote database in Azure
+### Remote
 
 1. `node .\scripts\db-setup.js "<SECRET_STORAGE_ACCOUNT_CONNECTION_STRING>" --reset`
 
-Replace `<SECRET_STORAGE_ACCOUNT_CONNECTION_STRING>` with the decrypted value from `env\env.dev.user`
+Replace `<SECRET_STORAGE_ACCOUNT_CONNECTION_STRING>` with the decrypted value from `env\env.dev.user`. You can use the `Decrypt secret` CodeLens feature shown above the entry in the file to view the decrypted value.
 
 ## Favorite Picsum images
 
