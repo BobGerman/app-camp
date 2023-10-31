@@ -9,9 +9,10 @@
             "dependsOn": [
                 "Validate prerequisites",
                 "Start local tunnel",
+                "npm install",
+                "Start Azurite emulator",
                 "Provision",
                 "Deploy",
-                "Start Azurite emulator",
                 "Start application"
             ],
             "dependsOrder": "sequence"
@@ -59,25 +60,10 @@
             "problemMatcher": "$teamsfx-local-tunnel-watch"
         },
         {
-            // Create the debug resources.
-            // See https://aka.ms/teamsfx-tasks/provision to know the details and how to customize the args.
-            "label": "Provision",
-            "type": "teamsfx",
-            "command": "provision",
-            "args": {
-                "env": "local"
-            }
-        },
-        {
-            // Build project.
-            // See https://aka.ms/teamsfx-tasks/deploy to know the details and how to customize the args.
-            "label": "Deploy",
-            "type": "teamsfx",
-            "command": "deploy",
-            "args": {
-                "env": "local"
-            }
-        },
+            "type": "shell",
+            "label": "npm install",
+            "command": "npm install --no-audit"
+          },
         {
             "label": "Start Azurite emulator",
             "type": "shell",
@@ -105,6 +91,26 @@
                 "reveal": "silent"
             }
         },
+        {
+            // Create the debug resources.
+            // See https://aka.ms/teamsfx-tasks/provision to know the details and how to customize the args.
+            "label": "Provision",
+            "type": "teamsfx",
+            "command": "provision",
+            "args": {
+                "env": "local"
+            }
+        },
+        {
+            // Build project.
+            // See https://aka.ms/teamsfx-tasks/deploy to know the details and how to customize the args.
+            "label": "Deploy",
+            "type": "teamsfx",
+            "command": "deploy",
+            "args": {
+                "env": "local"
+            }
+        },       
         {
             "label": "Start application",
             "type": "shell",

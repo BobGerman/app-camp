@@ -4,6 +4,13 @@
 version: 1.0.0
 
 provision:
+
+  - uses: script
+    name: Ensure database
+    with:
+      run: node db-setup.js
+      workingDirectory: scripts
+
   # Creates a Teams app
   - uses: teamsApp/create
     with:
@@ -75,11 +82,6 @@ provision:
       appId: M365_APP_ID
 
 deploy:
-  # Run npm command
-  - uses: cli/runNpmCommand
-    name: install dependencies
-    with:
-      args: install --no-audit
 
   # Generate runtime environment variables
   - uses: file/createOrUpdateEnvironmentFile
@@ -88,4 +90,4 @@ deploy:
       envs:
         BOT_ID: ${{BOT_ID}}
         BOT_PASSWORD: ${{SECRET_BOT_PASSWORD}}
-        TABLE_STORAGE_CONNECTION_STRING: ${{TABLE_STORAGE_CONNECTION_STRING}}
+        STORAGE_ACCOUNT_CONNECTION_STRING: ${{SECRET_STORAGE_ACCOUNT_CONNECTION_STRING}}
