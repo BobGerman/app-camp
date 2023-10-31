@@ -1,7 +1,7 @@
 {
     "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.16/MicrosoftTeams.schema.json",
     "manifestVersion": "1.16",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "id": "${{TEAMS_APP_ID}}",
     "packageName": "com.microsoft.teams.extension.northwindinv",
     "developer": {
@@ -20,7 +20,7 @@
     },
     "description": {
         "short": "App allows you to find and update product inventory information",
-        "full": "Find products by name, category, inventory status (units in stock), and supplier city. Update inventory status like units in stock for a product."
+        "full": "Northwind Inventory is the ultimate tool for managing your product inventory. With its intuitive interface and powerful features, you'll be able to easily find your products by name, category, inventory status, and supplier city. You can also update inventory information with the app. \n\n **Why Choose Northwind Inventory:** \n\n Northwind Inventory is the perfect solution for businesses of all sizes that need to keep track of their inventory. Whether you're a small business owner or a large corporation, Northwind Inventory can help you stay on top of your inventory management needs. \n\n **Features and Benefits:** \n\n - Easy Product Search: Quickly search for products by name, category, inventory status, or supplier city \r - Real-Time Inventory Updates: Keep track of inventory levels in real-time and update them as needed \r  - User-Friendly Interface: Northwind Inventory's intuitive interface makes it easy to navigate and use \n\n **Availability:** \n\n To use Northwind Inventory, you'll need an active Microsoft 365 account . Ensure that your administrator enables the app for your Microsoft 365 account."
     },
     "accentColor": "#3690E9",
     "bots": [

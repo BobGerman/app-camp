@@ -153,43 +153,23 @@ export const successCard =
                     {
                       "title": "Category",
                       "value": "${categoryName}"
-                    },
-                    {
+                  },
+                  {
                       "title": "Units in stock",
                       "value": "${unitsInStock}"
-                    },
-                    {
+                  },
+                  {
                       "title": "Unit price",
                       "value": "${unitPrice} USD"
-                    },
-                    {
-                      "title": "Quantity per unit",
-                      "value": "${quantityPerUnit}"
-                    },
-                    {
+                  },
+                  {
                       "title": "Units on order",
                       "value": "${unitsOnOrder}"
-                    },
-                    {
+                  },
+                  {
                       "title": "Reorder Level",
                       "value": "${reorderLevel}"
-                    },
-                    {
-                      "title": "Unit sales/period",
-                      "value": "${unitSales}"
-                    },
-                    {
-                      "title": "Revenue/period",
-                      "value": "${revenue}"
-                    },
-                    {
-                      "title": "Inventory value",
-                      "value": "${inventoryValue}"
-                    },
-                    {
-                      "title": "Average discount",
-                      "value": "${averageDiscount}"
-                    }
+                  }
                   ],
                   "separator": true
                 }

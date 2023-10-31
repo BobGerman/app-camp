@@ -34,7 +34,7 @@ async function handleTeamsMessagingExtensionQuery(
     stockLevel ??= cleanupParam(query.parameters[4]?.value);
     console.log(`🔎 Query #${++queryCount}:\nproductName=${productName}, categoryName=${categoryName}, inventoryStatus=${inventoryStatus}, supplierCity=${supplierCity}, stockLevel=${stockLevel}`);
 
-    const products = await searchProducts(productName, categoryName, inventoryStatus, supplierCity, stockLevel);
+    const products = await searchProducts(productName, categoryName, inventoryStatus, supplierCity, '');
 
     console.log(`Found ${products.length} products in the Northwind database`)
     const attachments = [];
