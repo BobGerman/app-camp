@@ -145,36 +145,58 @@ export const successCard =
               "type": "Column",
               "width": "stretch",
 
-              "items": [
-                {
-                  "type": "FactSet",
-                  "spacing": "Large",
-                  "facts": [
-                    {
-                      "title": "Category",
-                      "value": "${categoryName}"
-                  },
-                  {
-                      "title": "Units in stock",
-                      "value": "${unitsInStock}"
-                  },
-                  {
-                      "title": "Unit price",
-                      "value": "${unitPrice} USD"
-                  },
-                  {
-                      "title": "Units on order",
-                      "value": "${unitsOnOrder}"
-                  },
-                  {
-                      "title": "Reorder Level",
-                      "value": "${reorderLevel}"
-                  }
-                  ],
-                  "separator": true
-                }
-              ]
-            }
+                            "items": [
+                                {
+                                    "type": "FactSet",
+                                    "spacing": "Large",
+                                    "facts": [
+                                        {
+                                            "title": "Category",
+                                            "value": "${categoryName}"
+                                        },
+                                       
+                                        {
+                                            "title": "Unit price",
+                                            "value": "${unitPrice} USD"
+                                        },
+                                        {
+                                            "title": "Avg discount",
+                                            "value": "${averageDiscount}"
+                                        }
+                                        
+                                    ],
+                                    "separator": true
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+
+                            "items": [
+                                {
+                                    "type": "FactSet",
+                                    "spacing": "Large",
+                                    "facts": [
+                                       
+                                        {
+                                            "title": "Units in stock",
+                                            "value": "${unitsInStock}"
+                                        },                                      
+                                        {
+                                            "title": "Units on order",
+                                            "value": "${unitsOnOrder}"
+                                        },
+                                        {
+                                            "title": "Reorder Level",
+                                            "value": "${reorderLevel}"
+                                        }
+                                    ],
+                                    "separator": true
+                                }
+                            ]
+                        }
+                     
 
           ]
         }]
