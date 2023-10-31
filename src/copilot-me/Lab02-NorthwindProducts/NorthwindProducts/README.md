@@ -17,35 +17,21 @@ That way you can easily change node versions if you ever need to for another pro
 3. Open VS Code in this folder - the NorthwindProducts folder must be at the root in VS Code.
 The Teams Toolkit tab should light up with a list of accounts, Environment, etc.
 Under Accounts, sign into your Microsoft 365 tenant and verify that Teams Toolkit shows "Sideloading Enabled".
-Azure sign-in isn't needed unless you want to deploy the solution to Azure (which isn't ready yet because we don't set up the Table storage)
+Azure sign-in isn't needed unless you want to deploy the solution to Azure
 
-4. Set up the database, which will be stored in Azurite (Azure table storage emulator).
-
-In one console, run
-
-~~~sh
-npm run storage
-~~~
-
-While this is running, in a second console run:
-
-~~~sh
-node .\scripts\db-setup.js
-~~~
-
-You may want to install the Azure Storage Explorer and verify that you have the Northwind tables and they are populated.
-
-5. Edit env\.env.local and add this line:
+4. Edit env\.env.local.user and add this line:
 
 ~~~text
-TABLE_STORAGE_CONNECTION_STRING=UseDevelopmentStorage=true
+SECRET_STORAGE_ACCOUNT_CONNECTION_STRING=UseDevelopmentStorage=true
 ~~~
 
 ## Run the app locally
 
 1. Open the NorthwindProducs folder in VS Code
 
-2. Hit F5 or click one of the various iocons to start the debugger and select a profile for a browser you want to test with
+2. Hit F5 or click one of the various icons to start the debugger and select a profile for a browser you want to test with
+
+> NOTE: Azurite will be automatically started and a task to create and populate the tables will run. You can use Azure Storage Explorer to ensure that the Northwind tables are populated. If a table already exists, the data population will be skipped.
 
 Eventually, the browser should open and offer to install the "Northwind Orders" application. Just click the big "Add" button.
 
@@ -75,7 +61,6 @@ You should see the results, if any. For example, these queries are known to work
 
 # To Do list
 
-1. Add provisioning of table storage in Azure - works only locally now
 
 
 # Lab Writer Notes
@@ -95,18 +80,24 @@ npm install @microsoft/adaptivecards-tools
 npm install azurite --save-dev
 ```
 
-Add to .env.local:
+Add to .env.local.user:
 
 ~~~text
-TABLE_STORAGE_CONNECTION_STRING=UseDevelopmentStorage=true
+SECRET_STORAGE_ACCOUNT_CONNECTION_STRING=UseDevelopmentStorage=true
 ~~~
 
-To set up the Azurite database:
+## Reset database
 
-1. Ensure Azurite is running; if necessary, open a console and run `npm run storage`
-2. in a 2nd console, run `node ./scripts/db-setup.js`
-3. check in Storage Explorer to be sure data is there
-4. Shut consoles
+### Local
+
+1. `npm run storage`
+2. `node .\scripts\db-setup.js "UseDevelopmentStorage=true" --reset`
+
+### Remote
+
+1. `node .\scripts\db-setup.js "<SECRET_STORAGE_ACCOUNT_CONNECTION_STRING>" --reset`
+
+Replace `<SECRET_STORAGE_ACCOUNT_CONNECTION_STRING>` with the decrypted value from `env\env.dev.user`. You can use the `Decrypt secret` CodeLens feature shown above the entry in the file to view the decrypted value.
 
 ## Favorite Picsum images
 

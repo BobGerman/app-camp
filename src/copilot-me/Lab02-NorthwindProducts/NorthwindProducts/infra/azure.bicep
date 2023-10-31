@@ -29,6 +29,18 @@ resource serverfarm 'Microsoft.Web/serverfarms@2021-02-01' = {
   }
 }
 
+// storage account
+resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' = {
+  name: resourceBaseName
+  location: location
+  kind: 'StorageV2'
+  sku: {
+    name: 'Standard_LRS'
+  }
+}
+
+var storageAccountConnectionString = 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
+
 // Web App that hosts your bot
 resource webApp 'Microsoft.Web/sites@2021-02-01' = {
   kind: 'app'
@@ -60,15 +72,15 @@ resource webApp 'Microsoft.Web/sites@2021-02-01' = {
           name: 'BOT_PASSWORD'
           value: botAadAppClientSecret
         }
+        {
+          name: 'STORAGE_ACCOUNT_CONNECTION_STRING'
+          value: storageAccountConnectionString
+        }
       ]
       ftpsState: 'FtpsOnly'
     }
   }
 }
-
-// Add new storage account
-// Add connection string
-
 
 // Register your web service as a bot with the Bot Framework
 module azureBotRegistration './botRegistration/azurebot.bicep' = {
@@ -84,3 +96,4 @@ module azureBotRegistration './botRegistration/azurebot.bicep' = {
 // The output will be persisted in .env.{envName}. Visit https://aka.ms/teamsfx-actions/arm-deploy for more details.
 output BOT_AZURE_APP_SERVICE_RESOURCE_ID string = webApp.id
 output BOT_DOMAIN string = webApp.properties.defaultHostName
+output SECRET_STORAGE_ACCOUNT_CONNECTION_STRING string = storageAccountConnectionString
